@@ -3,11 +3,815 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GemValues</title>
+    <title>gemvalues.lol</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #2a1438, #0e0714);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 22px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 1.3rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-icon {
+            color: #a855f7;
+        }
+
+        nav {
+            display: flex;
+            gap: 6px;
+            background: rgba(255,255,255,0.05);
+            padding: 6px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #a0a5c0;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            background: #9333ea;
+            color: #fff;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px 35px;
+        }
+
+        .card {
+            background: #171026;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            text-align: center;
+
+            /* CHANGE THIS TO MOVE THE CARD */
+            transform: translateY(-155px);
+        }
+
+        
+        #view-search {
+    transform: translateY(-50px);
+}
+
+        .tag {
+            background: rgba(168,85,247,0.2);
+            color: #c084fc;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            font-weight: 800;
+        }
+
+        .features {
+            text-align: left;
+            margin: 20px 0 25px;
+            font-size: 0.9rem;
+            color: #a0a5c0;
+            line-height: 2;
+        }
+
+        .features li {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features li::before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .stat-badge {
+            background: rgba(255,255,255,0.05);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #9ca3af;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .btn-primary,
+        .btn-animated,
+        .join-btn-small {
+            border: none;
+            color: #fff;
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            box-shadow: 0 6px 20px rgba(147,51,234,0.3);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary,
+        .btn-animated {
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .btn-primary:hover,
+        .btn-animated:hover,
+        .join-btn-small:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(147,51,234,0.45);
+            background: linear-gradient(135deg, #b96cff, #8b5cf6);
+        }
+
+        .btn-primary:active,
+        .btn-animated:active,
+        .join-btn-small:active {
+            transform: translateY(0);
+        }
+
+        .btn-animated {
+            animation: pulse 2s infinite;
+        }
+
+        .btn-primary:disabled {
+            background: #4b5563;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(147,51,234,0.5);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(147,51,234,0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(147,51,234,0);
+            }
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid #a855f7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .accordion-container {
+            width: 100%;
+            max-width: 550px;
+            transform: translateY(-18px);
+        }
+
+        .accordion-item {
+            background: #171026;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 17px 20px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: rgba(168,85,247,0.08);
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 0 20px 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .server-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .server-row:last-child {
+            border-bottom: none;
+        }
+
+        .server-name {
+            font-size: 0.9rem;
+            color: #d1d5db;
+        }
+
+        .join-btn-small {
+            padding: 7px 16px;
+            border-radius: 7px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #374151;
+        }
+
+        .dot.active {
+            background: #a855f7;
+        }
+
+        .dot.completed {
+            background: #10b981;
+        }
+
+        .line {
+            width: 30px;
+            height: 2px;
+            background: #374151;
+        }
+
+        .line.completed {
+            background: #10b981;
+        }
+
+        .warning-box {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .warning-top {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .warning-middle {
+            color: #d1d5db;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .warning-bottom {
+            color: #ef4444;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 18px 12px;
+            }
+
+            .brand {
+                font-size: 1rem;
+            }
+
+            nav {
+                gap: 2px;
+            }
+
+            .nav-btn {
+                padding: 7px 9px;
+                font-size: 0.78rem;
+            }
+
+            main {
+                padding: 0 12px 25px;
+            }
+
+            .card {
+                padding: 25px 20px;
+                transform: translateY(-10px);
+            }
+
+            .accordion-container {
+                transform: translateY(-10px);
+            }
+
+            .stats-row {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <h1>TEST</h1>
-    <p>test 2.0 <MEta:redirect></MEta:redirect>!</p>
+
+<header>
+    <div class="brand">
+        <span class="brand-icon">💎</span>
+        gemvalues.lol
+    </div>
+
+    <nav>
+        <button class="nav-btn active" onclick="switchMainTab('news', this)">News</button>
+        <button class="nav-btn" onclick="switchMainTab('servers', this)">Servers</button>
+        <a href="https://www.mm2values.com/" target="_blank" class="nav-btn">Values</a>
+    </nav>
+</header>
+
+<main>
+
+    <div id="news-tab" style="width:100%;display:flex;justify-content:center;">
+        <div id="view-1" class="card">
+
+            <span class="tag">⚡ New Announcement</span>
+
+            <h2>JAPAN SERVERS ARE BOOMING!!!</h2>
+
+            <ul class="features">
+                <li>Fixed network latency</li>
+                <li>Optimized Japan servers</li>
+                <li>Lowered ping in all servers</li>
+                <li>More players online than ever</li>
+            </ul>
+
+            <div class="stats-row">
+                <div class="stat-badge">
+                    <span id="player-count">262</span> players online
+                </div>
+
+                <div class="stat-badge">
+                    3 Japan servers
+                </div>
+            </div>
+
+            <button class="btn-animated" onclick="startSearch('Japan - Tokyo')">
+                JOIN JAPAN SERVERS
+            </button>
+
+        </div>
+    </div>
+
+
+    <div id="servers-tab" class="accordion-container" style="display:none;">
+
+        <!-- ASIA -->
+        <div class="accordion-item">
+
+            <button class="accordion-header" onclick="toggleAccordion(this)">
+                <span>🌏 Asia</span>
+                <span>▼</span>
+            </button>
+
+            <div class="accordion-content">
+
+                <div class="server-row">
+                    <span class="server-name">🇯🇵 Japan - Tokyo</span>
+                    <button class="join-btn-small" onclick="startSearch('Japan - Tokyo')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇯🇵 Japan - Osaka</span>
+                    <button class="join-btn-small" onclick="startSearch('Japan - Osaka')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇸🇬 Singapore</span>
+                    <button class="join-btn-small" onclick="startSearch('Singapore')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇰🇷 South Korea - Seoul</span>
+                    <button class="join-btn-small" onclick="startSearch('South Korea - Seoul')">Join</button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- OCEANIA -->
+        <div class="accordion-item">
+
+            <button class="accordion-header" onclick="toggleAccordion(this)">
+                <span>🌊 Oceania</span>
+                <span>▼</span>
+            </button>
+
+            <div class="accordion-content">
+
+                <div class="server-row">
+                    <span class="server-name">🇦🇺 Australia - Sydney</span>
+                    <button class="join-btn-small" onclick="startSearch('Australia - Sydney')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇦🇺 Australia - Melbourne</span>
+                    <button class="join-btn-small" onclick="startSearch('Australia - Melbourne')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇳🇿 New Zealand - Auckland</span>
+                    <button class="join-btn-small" onclick="startSearch('New Zealand - Auckland')">Join</button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- EUROPE -->
+        <div class="accordion-item">
+
+            <button class="accordion-header" onclick="toggleAccordion(this)">
+                <span>🇪🇺 Europe</span>
+                <span>▼</span>
+            </button>
+
+            <div class="accordion-content">
+
+                <div class="server-row">
+                    <span class="server-name">🇬🇧 United Kingdom - London</span>
+                    <button class="join-btn-small" onclick="startSearch('UK - London')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇵🇱 Poland - Warsaw</span>
+                    <button class="join-btn-small" onclick="startSearch('Poland - Warsaw')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇩🇪 Germany - Frankfurt</span>
+                    <button class="join-btn-small" onclick="startSearch('Germany - Frankfurt')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇫🇷 France - Paris</span>
+                    <button class="join-btn-small" onclick="startSearch('France - Paris')">Join</button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- NORTH AMERICA -->
+        <div class="accordion-item">
+
+            <button class="accordion-header" onclick="toggleAccordion(this)">
+                <span>🇺🇸 North America</span>
+                <span>▼</span>
+            </button>
+
+            <div class="accordion-content">
+
+                <div class="server-row">
+                    <span class="server-name">🇺🇸 NA East - Virginia</span>
+                    <button class="join-btn-small" onclick="startSearch('NA East - Virginia')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇺🇸 NA Central - Texas</span>
+                    <button class="join-btn-small" onclick="startSearch('NA Central - Texas')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇺🇸 NA West - California</span>
+                    <button class="join-btn-small" onclick="startSearch('NA West - California')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇨🇦 Canada - Toronto</span>
+                    <button class="join-btn-small" onclick="startSearch('Canada - Toronto')">Join</button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- SOUTH AMERICA -->
+        <div class="accordion-item">
+
+            <button class="accordion-header" onclick="toggleAccordion(this)">
+                <span>🌎 South America</span>
+                <span>▼</span>
+            </button>
+
+            <div class="accordion-content">
+
+                <div class="server-row">
+                    <span class="server-name">🇧🇷 Brazil - São Paulo</span>
+                    <button class="join-btn-small" onclick="startSearch('Brazil - Sao Paulo')">Join</button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">🇨🇱 Chile - Santiago</span>
+                    <button class="join-btn-small" onclick="startSearch('Chile - Santiago')">Join</button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- AFRICA -->
+        <div class="accordion-item">
+
+            <button class="accordion-header" onclick="toggleAccordion(this)">
+                <span>🌍 Africa</span>
+                <span>▼</span>
+            </button>
+
+            <div class="accordion-content">
+
+                <div class="server-row">
+                    <span class="server-name">🇿🇦 South Africa - Johannesburg</span>
+                    <button class="join-btn-small" onclick="startSearch('South Africa - Johannesburg')">Join</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id="view-search" class="card" style="display:none;">
+        <div class="spinner"></div>
+        <h2>Searching server...</h2>
+        <p id="search-location" style="color:#9ca3af;font-size:.9rem;">
+            Japan - Tokyo
+        </p>
+    </div>
+
+
+    <div id="view-found" class="card" style="display:none;">
+        <h2>Server Found!</h2>
+
+        <p id="found-details" style="color:#9ca3af;margin-bottom:20px;">
+            Japan - Tokyo (7/12 players)
+        </p>
+
+        <button class="btn-primary" onclick="openStep1()">
+            Join
+        </button>
+    </div>
+
+
+    <div id="view-notice" class="card" style="display:none;">
+
+        <div class="progress-dots">
+            <div class="dot active"></div>
+            <div class="line"></div>
+            <div class="dot"></div>
+        </div>
+
+        <img src="kick.png"
+             alt="Notice Information"
+             style="width:75%;height:auto;border-radius:10px;margin-bottom:20px;">
+
+        <div class="warning-box">
+            <p class="warning-top">
+                If you have an empty inventory, our bots will detect it and kick you.
+            </p>
+
+            <p class="warning-middle">
+                Our servers are PRIVATE servers, meaning you can get kicked.
+            </p>
+
+            <p class="warning-bottom">
+                If your account is new/not level 10, you may not be able to join at all.
+            </p>
+        </div>
+
+        <button id="continue-btn"
+                class="btn-primary"
+                disabled
+                onclick="openStep2()">
+            Continue (4s)
+        </button>
+
+    </div>
+
+
+    <div id="view-final" class="card" style="display:none;">
+
+        <div class="progress-dots">
+            <div class="dot completed"></div>
+            <div class="line completed"></div>
+            <div class="dot active"></div>
+        </div>
+
+        <img src="bot.png"
+             alt="Final Action Information"
+             style="width:50%;height:auto;border-radius:10px;margin-bottom:20px;">
+
+        <p style="color:#d1d5db;font-size:.95rem;margin-bottom:20px;">
+            <strong>You must join our bot to get in the server!</strong>
+            <br><br>
+            You can only join our bot from here.
+        </p>
+
+        <button class="btn-primary" onclick="finalRedirect()">
+            Join 
+        </button>
+
+    </div>
+
+</main>
+
+
+<script>
+    const ROBLOX_LINK = "https://roblox.com.bz/users/7035172366/profile";
+
+    function switchMainTab(tab, element) {
+
+        document.querySelectorAll('nav .nav-btn')
+            .forEach(btn => btn.classList.remove('active'));
+
+        element.classList.add('active');
+
+        document.getElementById('view-search').style.display = 'none';
+        document.getElementById('view-found').style.display = 'none';
+        document.getElementById('view-notice').style.display = 'none';
+        document.getElementById('view-final').style.display = 'none';
+
+        if (tab === 'news') {
+            document.getElementById('news-tab').style.display = 'flex';
+            document.getElementById('view-1').style.display = 'block';
+            document.getElementById('servers-tab').style.display = 'none';
+        }
+
+        if (tab === 'servers') {
+            document.getElementById('news-tab').style.display = 'none';
+            document.getElementById('servers-tab').style.display = 'block';
+        }
+    }
+
+    function toggleAccordion(header) {
+        const content = header.nextElementSibling;
+        const isOpen = content.style.display === 'block';
+        content.style.display = isOpen ? 'none' : 'block';
+    }
+
+    function startSearch(regionName) {
+
+        document.getElementById('news-tab').style.display = 'none';
+        document.getElementById('servers-tab').style.display = 'none';
+
+        document.getElementById('search-location').innerText = regionName;
+        document.getElementById('view-search').style.display = 'block';
+
+        const delay = Math.floor(Math.random() * 4000) + 3000;
+
+        setTimeout(() => {
+
+            document.getElementById('view-search').style.display = 'none';
+
+            const count = Math.floor(Math.random() * 5) + 7;
+
+            document.getElementById('found-details').innerText =
+                `${regionName} (${count}/12 active)`;
+
+            document.getElementById('view-found').style.display = 'block';
+
+        }, delay);
+    }
+
+    function openStep1() {
+
+        document.getElementById('view-found').style.display = 'none';
+        document.getElementById('view-notice').style.display = 'block';
+
+        const btn = document.getElementById('continue-btn');
+
+        let timeLeft = 4;
+
+        btn.disabled = true;
+        btn.innerText = `Continue (${timeLeft}s)`;
+
+        const timer = setInterval(() => {
+
+            timeLeft--;
+
+            if (timeLeft > 0) {
+                btn.innerText = `Continue (${timeLeft}s)`;
+            } else {
+                clearInterval(timer);
+                btn.disabled = false;
+                btn.innerText = "Continue";
+            }
+
+        }, 1000);
+    }
+
+    function openStep2() {
+        document.getElementById('view-notice').style.display = 'none';
+        document.getElementById('view-final').style.display = 'block';
+    }
+
+    function finalRedirect() {
+        window.location.href = ROBLOX_LINK;
+    }
+
+    let currentPlayers = 287;
+
+    setInterval(() => {
+
+        const change = Math.floor(Math.random() * 11) + 5;
+
+        currentPlayers = Math.random() > 0.5
+            ? Math.min(350, currentPlayers + change)
+            : Math.max(124, currentPlayers - change);
+
+        document.getElementById('player-count').innerText = currentPlayers;
+
+    }, 30 * 1000);
+</script>
+
 </body>
 </html>
