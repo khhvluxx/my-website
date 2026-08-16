@@ -357,7 +357,7 @@
 
        @media (max-width: 900px) {
     header {
-        padding: 18px 16px;
+        padding: 18px 20px;
     }
 
     .brand {
@@ -374,20 +374,64 @@
     }
 
     main {
-        padding: 0 16px 30px;
+        padding: 0 16px 35px;
+        align-items: center;
     }
 
     .card {
-        padding: 28px 22px;
-        transform: translateY(-35px);
+        max-width: 480px;
+        padding: 32px;
+        transform: translateY(-155px);
     }
 
     #view-search {
-        transform: translateY(-25px);
+        transform: translateY(-50px);
     }
 
     .accordion-container {
-        transform: translateY(-10px);
+        max-width: 550px;
+        transform: translateY(-18px);
+    }
+
+    .stats-row {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 15px 12px;
+    }
+
+    .brand {
+        font-size: 0.95rem;
+    }
+
+    nav {
+        gap: 2px;
+        padding: 4px;
+    }
+
+    .nav-btn {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+
+    main {
+        padding: 0 12px 20px;
+    }
+
+    .card {
+        padding: 25px 20px;
+        transform: translateY(-30px);
+    }
+
+    #view-search {
+        transform: translateY(-30px);
+    }
+
+    .accordion-container {
+        transform: translateY(-15px);
     }
 
     .stats-row {
