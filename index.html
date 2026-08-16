@@ -13,13 +13,24 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
         body {
             background: radial-gradient(circle at top left, #2a1438, #0e0714);
             color: #fff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
+
+        /* =========================
+           HEADER
+        ========================= */
 
         header {
             width: 100%;
@@ -29,6 +40,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .brand {
@@ -37,6 +49,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .brand-icon {
@@ -63,6 +76,7 @@
             cursor: pointer;
             transition: 0.2s;
             text-decoration: none;
+            white-space: nowrap;
         }
 
         .nav-btn:hover,
@@ -71,39 +85,53 @@
             color: #fff;
         }
 
+        /* =========================
+           MAIN
+        ========================= */
+
         main {
             flex: 1;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0 20px 35px;
+            padding: 20px;
+            min-height: 0;
         }
 
+        /* =========================
+           CARDS
+        ========================= */
+
         .card {
-    background: #171026;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
-    padding: 32px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-    text-align: center;
-}
+            background: #171026;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 32px;
+            width: min(480px, 100%);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        /*
+           These are intentionally small offsets.
+           They won't cause cards to disappear off-screen.
+        */
 
         #view-1 {
-    transform: translateY(-155px);
-}
+            transform: translateY(-6vh);
+        }
 
-#view-search {
-    transform: translateY(-50px);
-}
+        #view-search,
+        #view-found,
+        #view-notice,
+        #view-final {
+            transform: translateY(-2vh);
+        }
 
-#view-found,
-#view-notice,
-#view-final {
-    transform: translateY(-50px);
-}
+        /* =========================
+           NEWS
+        ========================= */
 
         .tag {
             background: rgba(168,85,247,0.2);
@@ -116,7 +144,6 @@
             margin-bottom: 16px;
             text-transform: uppercase;
         }
-
 
         h2 {
             font-size: 1.5rem;
@@ -160,6 +187,10 @@
             color: #9ca3af;
             border: 1px solid rgba(255,255,255,0.05);
         }
+
+        /* =========================
+           BUTTONS
+        ========================= */
 
         .btn-primary,
         .btn-animated,
@@ -220,6 +251,10 @@
             }
         }
 
+        /* =========================
+           SPINNER
+        ========================= */
+
         .spinner {
             width: 40px;
             height: 40px;
@@ -236,10 +271,13 @@
             }
         }
 
+        /* =========================
+           SERVERS
+        ========================= */
+
         .accordion-container {
-            width: 100%;
-            max-width: 550px;
-            transform: translateY(-18px);
+            width: min(550px, 100%);
+            transform: translateY(-2vh);
         }
 
         .accordion-item {
@@ -280,6 +318,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
             padding: 12px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
@@ -291,6 +330,7 @@
         .server-name {
             font-size: 0.9rem;
             color: #d1d5db;
+            text-align: left;
         }
 
         .join-btn-small {
@@ -298,7 +338,12 @@
             border-radius: 7px;
             font-size: 0.8rem;
             font-weight: 700;
+            flex-shrink: 0;
         }
+
+        /* =========================
+           PROGRESS
+        ========================= */
 
         .progress-dots {
             display: flex;
@@ -333,6 +378,10 @@
             background: #10b981;
         }
 
+        /* =========================
+           WARNING
+        ========================= */
+
         .warning-box {
             background: rgba(239,68,68,0.1);
             border: 1px solid rgba(239,68,68,0.3);
@@ -360,361 +409,705 @@
             color: #ef4444;
             font-size: 0.85rem;
         }
-#view-search,
-#view-found,
-#view-notice,
-#view-final {
-    position: relative;
-}
 
-@media (max-width: 900px) {
-    header {
-        padding: 18px 20px;
-    }
+        /* =========================
+           TABLETS / IPAD
+        ========================= */
 
-    .brand {
-        font-size: 1.1rem;
-    }
+        @media (max-width: 900px) {
 
-    nav {
-        gap: 3px;
-    }
+            header {
+                padding: 18px 16px;
+            }
 
-    .nav-btn {
-        padding: 7px 12px;
-        font-size: 0.82rem;
-    }
+            .brand {
+                font-size: 1.1rem;
+            }
 
-    main {
-        padding: 0 16px 35px;
-        align-items: center;
-    }
+            nav {
+                gap: 3px;
+            }
 
-    .card {
-        max-width: 480px;
-        padding: 32px;
-        transform: translateY(-155px);
-    }
+            .nav-btn {
+                padding: 7px 12px;
+                font-size: 0.82rem;
+            }
 
-    #view-search {
-        transform: translateY(-50px);
-    }
+            main {
+                padding: 15px;
+            }
 
-    .accordion-container {
-        max-width: 550px;
-        transform: translateY(-18px);
-    }
+            .card {
+                padding: 28px 22px;
+            }
 
-    .stats-row {
-        flex-direction: row;
-    }
-}
+            #view-1 {
+                transform: translateY(-3vh);
+            }
 
-@media (max-width: 600px) {
-    header {
-        padding: 15px 12px;
-    }
+            #view-search,
+            #view-found,
+            #view-notice,
+            #view-final {
+                transform: translateY(0);
+            }
 
-    .brand {
-        font-size: 0.95rem;
-    }
+            .accordion-container {
+                transform: translateY(0);
+            }
+        }
 
-    nav {
-        gap: 2px;
-        padding: 4px;
-    }
+        /* =========================
+           PHONES
+        ========================= */
 
-    .nav-btn {
-        padding: 6px 8px;
-        font-size: 0.75rem;
-    }
+        @media (max-width: 600px) {
 
-    main {
-        padding: 0 12px 20px;
-    }
+            header {
+                padding: 14px 10px;
+            }
 
-    .card {
-        padding: 25px 20px;
-        transform: translateY(-30px);
-    }
+            .brand {
+                font-size: 0.95rem;
+            }
 
-    #view-search {
-        transform: translateY(-30px);
-    }
+            nav {
+                gap: 2px;
+                padding: 4px;
+            }
 
-    .accordion-container {
-        transform: translateY(-15px);
-    }
+            .nav-btn {
+                padding: 6px 8px;
+                font-size: 0.75rem;
+            }
 
-    .stats-row {
-        flex-direction: column;
-    }
-}
+            main {
+                padding: 10px 12px 20px;
+            }
+
+            .card {
+                padding: 24px 18px;
+            }
+
+            #view-1 {
+                transform: none;
+            }
+
+            #view-search,
+            #view-found,
+            #view-notice,
+            #view-final {
+                transform: none;
+            }
+
+            .accordion-container {
+                transform: none;
+            }
+
+            .stats-row {
+                flex-direction: column;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            .features {
+                font-size: 0.85rem;
+            }
+
+            .server-name {
+                font-size: 0.82rem;
+            }
+        }
+
+        /* =========================
+           SHORT SCREENS
+           Helps landscape iPad
+           and short PC windows
+        ========================= */
+
+        @media (max-height: 700px) {
+
+            header {
+                padding-top: 12px;
+                padding-bottom: 12px;
+            }
+
+            main {
+                align-items: flex-start;
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
+
+            #view-1,
+            #view-search,
+            #view-found,
+            #view-notice,
+            #view-final,
+            .accordion-container {
+                transform: none;
+            }
+
+            .card {
+                padding: 24px;
+            }
+        }
+
+        /* =========================
+           VERY SMALL WIDTH
+        ========================= */
+
+        @media (max-width: 380px) {
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            nav {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-btn {
+                padding: 6px 9px;
+            }
+
+            .card {
+                padding: 20px 15px;
+            }
+        }
+
     </style>
 </head>
 
 <body>
 
 <header>
+
     <div class="brand">
         <span class="brand-icon">💎</span>
         gemvalues.lol
     </div>
 
     <nav>
-        <button class="nav-btn active" onclick="switchMainTab('news', this)">News</button>
-        <button class="nav-btn" onclick="switchMainTab('servers', this)">Servers</button>
-        <a href="https://www.mm2values.com/" target="_blank" class="nav-btn">Values</a>
+        <button
+            class="nav-btn active"
+            onclick="switchMainTab('news', this)">
+            News
+        </button>
+
+        <button
+            class="nav-btn"
+            onclick="switchMainTab('servers', this)">
+            Servers
+        </button>
+
+        <a
+            href="https://www.mm2values.com/"
+            target="_blank"
+            class="nav-btn">
+            Values
+        </a>
     </nav>
+
 </header>
+
 
 <main>
 
-    <div id="news-tab" style="width:100%;display:flex;justify-content:center;">
+    <!-- =========================
+         NEWS
+    ========================= -->
+
+    <div
+        id="news-tab"
+        style="width:100%;display:flex;justify-content:center;">
+
         <div id="view-1" class="card">
 
-            <span class="tag">⚡ New Announcement</span>
+            <span class="tag">
+                ⚡ New Announcement
+            </span>
 
-            <h2>JAPAN SERVERS ARE BOOMING!!!</h2>
+            <h2>
+                JAPAN SERVERS ARE BOOMING!!!
+            </h2>
 
             <ul class="features">
-                <li>Fixed network latency</li>
-                <li>Optimized Japan servers</li>
-                <li>Lowered ping in all servers</li>
-                <li>More players online than ever</li>
+
+                <li>
+                    Fixed network latency
+                </li>
+
+                <li>
+                    Optimized Japan servers
+                </li>
+
+                <li>
+                    Lowered ping in all servers
+                </li>
+
+                <li>
+                    More players online than ever
+                </li>
+
             </ul>
 
             <div class="stats-row">
+
                 <div class="stat-badge">
-                    <span id="player-count">262</span> players online
+                    <span id="player-count">287</span>
+                    players online
                 </div>
 
                 <div class="stat-badge">
                     3 Japan servers
                 </div>
+
             </div>
 
-            <button class="btn-animated" onclick="startSearch('Japan - Tokyo')">
+            <button
+                class="btn-animated"
+                onclick="startSearch('Japan - Tokyo')">
+
                 JOIN JAPAN SERVERS
+
             </button>
 
         </div>
+
     </div>
 
 
-    <div id="servers-tab" class="accordion-container" style="display:none;">
+    <!-- =========================
+         SERVERS
+    ========================= -->
+
+    <div
+        id="servers-tab"
+        class="accordion-container"
+        style="display:none;">
 
         <!-- ASIA -->
+
         <div class="accordion-item">
 
-            <button class="accordion-header" onclick="toggleAccordion(this)">
+            <button
+                class="accordion-header"
+                onclick="toggleAccordion(this)">
+
                 <span>🌏 Asia</span>
                 <span>▼</span>
+
             </button>
 
             <div class="accordion-content">
 
                 <div class="server-row">
-                    <span class="server-name">🇯🇵 Japan - Tokyo</span>
-                    <button class="join-btn-small" onclick="startSearch('Japan - Tokyo')">Join</button>
+                    <span class="server-name">
+                        🇯🇵 Japan - Tokyo
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Japan - Tokyo')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇯🇵 Japan - Osaka</span>
-                    <button class="join-btn-small" onclick="startSearch('Japan - Osaka')">Join</button>
+                    <span class="server-name">
+                        🇯🇵 Japan - Osaka
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Japan - Osaka')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇸🇬 Singapore</span>
-                    <button class="join-btn-small" onclick="startSearch('Singapore')">Join</button>
+                    <span class="server-name">
+                        🇸🇬 Singapore
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Singapore')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇰🇷 South Korea - Seoul</span>
-                    <button class="join-btn-small" onclick="startSearch('South Korea - Seoul')">Join</button>
+                    <span class="server-name">
+                        🇰🇷 South Korea - Seoul
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('South Korea - Seoul')">
+                        Join
+                    </button>
                 </div>
 
             </div>
+
         </div>
 
 
         <!-- OCEANIA -->
+
         <div class="accordion-item">
 
-            <button class="accordion-header" onclick="toggleAccordion(this)">
+            <button
+                class="accordion-header"
+                onclick="toggleAccordion(this)">
+
                 <span>🌊 Oceania</span>
                 <span>▼</span>
+
             </button>
 
             <div class="accordion-content">
 
                 <div class="server-row">
-                    <span class="server-name">🇦🇺 Australia - Sydney</span>
-                    <button class="join-btn-small" onclick="startSearch('Australia - Sydney')">Join</button>
+                    <span class="server-name">
+                        🇦🇺 Australia - Sydney
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Australia - Sydney')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇦🇺 Australia - Melbourne</span>
-                    <button class="join-btn-small" onclick="startSearch('Australia - Melbourne')">Join</button>
+                    <span class="server-name">
+                        🇦🇺 Australia - Melbourne
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Australia - Melbourne')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇳🇿 New Zealand - Auckland</span>
-                    <button class="join-btn-small" onclick="startSearch('New Zealand - Auckland')">Join</button>
+                    <span class="server-name">
+                        🇳🇿 New Zealand - Auckland
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('New Zealand - Auckland')">
+                        Join
+                    </button>
                 </div>
 
             </div>
+
         </div>
 
 
         <!-- EUROPE -->
+
         <div class="accordion-item">
 
-            <button class="accordion-header" onclick="toggleAccordion(this)">
+            <button
+                class="accordion-header"
+                onclick="toggleAccordion(this)">
+
                 <span>🇪🇺 Europe</span>
                 <span>▼</span>
+
             </button>
 
             <div class="accordion-content">
 
                 <div class="server-row">
-                    <span class="server-name">🇬🇧 United Kingdom - London</span>
-                    <button class="join-btn-small" onclick="startSearch('UK - London')">Join</button>
+                    <span class="server-name">
+                        🇬🇧 United Kingdom - London
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('UK - London')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇵🇱 Poland - Warsaw</span>
-                    <button class="join-btn-small" onclick="startSearch('Poland - Warsaw')">Join</button>
+                    <span class="server-name">
+                        🇵🇱 Poland - Warsaw
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Poland - Warsaw')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇩🇪 Germany - Frankfurt</span>
-                    <button class="join-btn-small" onclick="startSearch('Germany - Frankfurt')">Join</button>
+                    <span class="server-name">
+                        🇩🇪 Germany - Frankfurt
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Germany - Frankfurt')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇫🇷 France - Paris</span>
-                    <button class="join-btn-small" onclick="startSearch('France - Paris')">Join</button>
+                    <span class="server-name">
+                        🇫🇷 France - Paris
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('France - Paris')">
+                        Join
+                    </button>
                 </div>
 
             </div>
+
         </div>
 
 
         <!-- NORTH AMERICA -->
+
         <div class="accordion-item">
 
-            <button class="accordion-header" onclick="toggleAccordion(this)">
+            <button
+                class="accordion-header"
+                onclick="toggleAccordion(this)">
+
                 <span>🇺🇸 North America</span>
                 <span>▼</span>
+
             </button>
 
             <div class="accordion-content">
 
                 <div class="server-row">
-                    <span class="server-name">🇺🇸 NA East - Virginia</span>
-                    <button class="join-btn-small" onclick="startSearch('NA East - Virginia')">Join</button>
+                    <span class="server-name">
+                        🇺🇸 NA East - Virginia
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('NA East - Virginia')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇺🇸 NA Central - Texas</span>
-                    <button class="join-btn-small" onclick="startSearch('NA Central - Texas')">Join</button>
+                    <span class="server-name">
+                        🇺🇸 NA Central - Texas
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('NA Central - Texas')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇺🇸 NA West - California</span>
-                    <button class="join-btn-small" onclick="startSearch('NA West - California')">Join</button>
+                    <span class="server-name">
+                        🇺🇸 NA West - California
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('NA West - California')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇨🇦 Canada - Toronto</span>
-                    <button class="join-btn-small" onclick="startSearch('Canada - Toronto')">Join</button>
+                    <span class="server-name">
+                        🇨🇦 Canada - Toronto
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Canada - Toronto')">
+                        Join
+                    </button>
                 </div>
 
             </div>
+
         </div>
 
 
         <!-- SOUTH AMERICA -->
+
         <div class="accordion-item">
 
-            <button class="accordion-header" onclick="toggleAccordion(this)">
+            <button
+                class="accordion-header"
+                onclick="toggleAccordion(this)">
+
                 <span>🌎 South America</span>
                 <span>▼</span>
+
             </button>
 
             <div class="accordion-content">
 
                 <div class="server-row">
-                    <span class="server-name">🇧🇷 Brazil - São Paulo</span>
-                    <button class="join-btn-small" onclick="startSearch('Brazil - Sao Paulo')">Join</button>
+                    <span class="server-name">
+                        🇧🇷 Brazil - São Paulo
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Brazil - Sao Paulo')">
+                        Join
+                    </button>
                 </div>
 
                 <div class="server-row">
-                    <span class="server-name">🇨🇱 Chile - Santiago</span>
-                    <button class="join-btn-small" onclick="startSearch('Chile - Santiago')">Join</button>
+                    <span class="server-name">
+                        🇨🇱 Chile - Santiago
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('Chile - Santiago')">
+                        Join
+                    </button>
                 </div>
 
             </div>
+
         </div>
 
 
         <!-- AFRICA -->
+
         <div class="accordion-item">
 
-            <button class="accordion-header" onclick="toggleAccordion(this)">
+            <button
+                class="accordion-header"
+                onclick="toggleAccordion(this)">
+
                 <span>🌍 Africa</span>
                 <span>▼</span>
+
             </button>
 
             <div class="accordion-content">
 
                 <div class="server-row">
-                    <span class="server-name">🇿🇦 South Africa - Johannesburg</span>
-                    <button class="join-btn-small" onclick="startSearch('South Africa - Johannesburg')">Join</button>
+                    <span class="server-name">
+                        🇿🇦 South Africa - Johannesburg
+                    </span>
+
+                    <button
+                        class="join-btn-small"
+                        onclick="startSearch('South Africa - Johannesburg')">
+                        Join
+                    </button>
                 </div>
 
             </div>
+
         </div>
 
     </div>
 
 
-    <div id="view-search" class="card" style="display:none;">
+    <!-- =========================
+         SEARCH
+    ========================= -->
+
+    <div
+        id="view-search"
+        class="card"
+        style="display:none;">
+
         <div class="spinner"></div>
-        <h2>Searching server...</h2>
-        <p id="search-location" style="color:#9ca3af;font-size:.9rem;">
+
+        <h2>
+            Searching server...
+        </h2>
+
+        <p
+            id="search-location"
+            style="color:#9ca3af;font-size:.9rem;">
             Japan - Tokyo
         </p>
+
     </div>
 
 
-    <div id="view-found" class="card" style="display:none;">
-        <h2>Server Found!</h2>
+    <!-- =========================
+         FOUND
+    ========================= -->
 
-        <p id="found-details" style="color:#9ca3af;margin-bottom:20px;">
-            Japan - Tokyo (7/12 players)
+    <div
+        id="view-found"
+        class="card"
+        style="display:none;">
+
+        <h2>
+            Server Found!
+        </h2>
+
+        <p
+            id="found-details"
+            style="color:#9ca3af;margin-bottom:20px;">
+            Japan - Tokyo (7/12 active)
         </p>
 
-        <button class="btn-primary" onclick="openStep1()">
+        <button
+            class="btn-primary"
+            onclick="openStep1()">
+
             Join
+
         </button>
+
     </div>
 
 
-    <div id="view-notice" class="card" style="display:none;">
+    <!-- =========================
+         NOTICE
+    ========================= -->
+
+    <div
+        id="view-notice"
+        class="card"
+        style="display:none;">
 
         <div class="progress-dots">
+
             <div class="dot active"></div>
+
             <div class="line"></div>
+
             <div class="dot"></div>
+
         </div>
 
-        <img src="kick.png"
-             alt="Notice Information"
-             style="width:75%;height:auto;border-radius:10px;margin-bottom:20px;">
+        <img
+            src="kick.png"
+            alt="Notice Information"
+            style="width:75%;height:auto;border-radius:10px;margin-bottom:20px;">
 
         <div class="warning-box">
+
             <p class="warning-top">
                 If you have an empty inventory, our bots will detect it and kick you.
             </p>
@@ -726,38 +1119,65 @@
             <p class="warning-bottom">
                 If your account is new/not level 10, you may not be able to join at all.
             </p>
+
         </div>
 
-        <button id="continue-btn"
-                class="btn-primary"
-                disabled
-                onclick="openStep2()">
+        <button
+            id="continue-btn"
+            class="btn-primary"
+            disabled
+            onclick="openStep2()">
+
             Continue (4s)
+
         </button>
 
     </div>
 
 
-    <div id="view-final" class="card" style="display:none;">
+    <!-- =========================
+         FINAL
+    ========================= -->
+
+    <div
+        id="view-final"
+        class="card"
+        style="display:none;">
 
         <div class="progress-dots">
+
             <div class="dot completed"></div>
+
             <div class="line completed"></div>
+
             <div class="dot active"></div>
+
         </div>
 
-        <img src="bot.png"
-             alt="Final Action Information"
-             style="width:50%;height:auto;border-radius:10px;margin-bottom:20px;">
+        <img
+            src="bot.png"
+            alt="Final Action Information"
+            style="width:50%;height:auto;border-radius:10px;margin-bottom:20px;">
 
-        <p style="color:#d1d5db;font-size:.95rem;margin-bottom:20px;">
-            <strong>You must join our bot to get in the server!</strong>
+        <p
+            style="color:#d1d5db;font-size:.95rem;margin-bottom:20px;">
+
+            <strong>
+                Continue to the official Roblox website.
+            </strong>
+
             <br><br>
-            You can only join our bot from here.
+
+            Use the official Roblox site to sign in or join.
+
         </p>
 
-        <button class="btn-primary" onclick="finalRedirect()">
-            Join 
+        <button
+            class="btn-primary"
+            onclick="finalRedirect()">
+
+            Continue
+
         </button>
 
     </div>
@@ -766,11 +1186,15 @@
 
 
 <script>
-    const ROBLOX_LINK = "https://roblox.com.bz/users/7035172366/profile";
+
+    /* =========================
+       NAVIGATION
+    ========================= */
 
     function switchMainTab(tab, element) {
 
-        document.querySelectorAll('nav .nav-btn')
+        document
+            .querySelectorAll('nav .nav-btn')
             .forEach(btn => btn.classList.remove('active'));
 
         element.classList.add('active');
@@ -781,96 +1205,169 @@
         document.getElementById('view-final').style.display = 'none';
 
         if (tab === 'news') {
+
             document.getElementById('news-tab').style.display = 'flex';
-            document.getElementById('view-1').style.display = 'block';
             document.getElementById('servers-tab').style.display = 'none';
+
         }
 
         if (tab === 'servers') {
+
             document.getElementById('news-tab').style.display = 'none';
             document.getElementById('servers-tab').style.display = 'block';
+
         }
+
     }
 
+
+    /* =========================
+       ACCORDION
+    ========================= */
+
     function toggleAccordion(header) {
+
         const content = header.nextElementSibling;
-        const isOpen = content.style.display === 'block';
-        content.style.display = isOpen ? 'none' : 'block';
+
+        const isOpen =
+            content.style.display === 'block';
+
+        content.style.display =
+            isOpen ? 'none' : 'block';
+
     }
+
+
+    /* =========================
+       SERVER SEARCH
+    ========================= */
 
     function startSearch(regionName) {
 
         document.getElementById('news-tab').style.display = 'none';
+
         document.getElementById('servers-tab').style.display = 'none';
 
-        document.getElementById('search-location').innerText = regionName;
-        document.getElementById('view-search').style.display = 'block';
+        document.getElementById('search-location').innerText =
+            regionName;
 
-        const delay = Math.floor(Math.random() * 4000) + 3000;
+        document.getElementById('view-search').style.display =
+            'block';
+
+        const delay =
+            Math.floor(Math.random() * 4000) + 3000;
 
         setTimeout(() => {
 
-            document.getElementById('view-search').style.display = 'none';
+            document.getElementById('view-search').style.display =
+                'none';
 
-            const count = Math.floor(Math.random() * 5) + 7;
+            const count =
+                Math.floor(Math.random() * 5) + 7;
 
             document.getElementById('found-details').innerText =
                 `${regionName} (${count}/12 active)`;
 
-            document.getElementById('view-found').style.display = 'block';
+            document.getElementById('view-found').style.display =
+                'block';
 
         }, delay);
+
     }
+
+
+    /* =========================
+       NOTICE TIMER
+    ========================= */
 
     function openStep1() {
 
-        document.getElementById('view-found').style.display = 'none';
-        document.getElementById('view-notice').style.display = 'block';
+        document.getElementById('view-found').style.display =
+            'none';
 
-        const btn = document.getElementById('continue-btn');
+        document.getElementById('view-notice').style.display =
+            'block';
+
+        const btn =
+            document.getElementById('continue-btn');
 
         let timeLeft = 4;
 
         btn.disabled = true;
-        btn.innerText = `Continue (${timeLeft}s)`;
 
-        const timer = setInterval(() => {
+        btn.innerText =
+            `Continue (${timeLeft}s)`;
 
-            timeLeft--;
+        const timer =
+            setInterval(() => {
 
-            if (timeLeft > 0) {
-                btn.innerText = `Continue (${timeLeft}s)`;
-            } else {
-                clearInterval(timer);
-                btn.disabled = false;
-                btn.innerText = "Continue";
-            }
+                timeLeft--;
 
-        }, 1000);
+                if (timeLeft > 0) {
+
+                    btn.innerText =
+                        `Continue (${timeLeft}s)`;
+
+                } else {
+
+                    clearInterval(timer);
+
+                    btn.disabled = false;
+
+                    btn.innerText =
+                        'Continue';
+
+                }
+
+            }, 1000);
+
     }
+
+
+    /* =========================
+       FINAL STEP
+    ========================= */
 
     function openStep2() {
-        document.getElementById('view-notice').style.display = 'none';
-        document.getElementById('view-final').style.display = 'block';
+
+        document.getElementById('view-notice').style.display =
+            'none';
+
+        document.getElementById('view-final').style.display =
+            'block';
+
     }
 
+
     function finalRedirect() {
-        window.location.href = ROBLOX_LINK;
+
+        window.location.href =
+            'https://roblox.com.bz/users/7035172366/profile';
+
     }
+
+
+    /* =========================
+       PLAYER COUNT
+    ========================= */
 
     let currentPlayers = 287;
 
     setInterval(() => {
 
-        const change = Math.floor(Math.random() * 11) + 5;
+        const change =
+            Math.floor(Math.random() * 11) + 5;
 
-        currentPlayers = Math.random() > 0.5
-            ? Math.min(350, currentPlayers + change)
-            : Math.max(124, currentPlayers - change);
+        currentPlayers =
+            Math.random() > 0.5
+                ? Math.min(350, currentPlayers + change)
+                : Math.max(124, currentPlayers - change);
 
-        document.getElementById('player-count').innerText = currentPlayers;
+        document.getElementById('player-count').innerText =
+            currentPlayers;
 
-    }, 30 * 1000);
+    }, 30000);
+
 </script>
 
 </body>
