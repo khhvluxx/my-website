@@ -1,951 +1,1898 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>gemvalues.lol</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        html,
-        body {
-            width: 100%;
-            min-height: 100%;
-        }
-
-        body {
-            background: radial-gradient(circle at top left, #2a1438, #0e0714);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        header {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 22px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .brand {
-            font-size: 1.3rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        .brand-icon {
-            color: #a855f7;
-        }
-
-        nav {
-            display: flex;
-            gap: 6px;
-            background: rgba(255,255,255,0.05);
-            padding: 6px;
-            border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(8px);
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: #a0a5c0;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.2s;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .nav-btn:hover,
-        .nav-btn.active {
-            background: #9333ea;
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
-        }
-
-        /* =========================
-           MAIN
-        ========================= */
-
-        main {
-            flex: 1;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            min-height: 0;
-        }
-
-        /* =========================
-           CARDS
-        ========================= */
-
-        .card {
-            background: rgba(23, 16, 38, 0.85);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 16px;
-            padding: 32px;
-            width: min(480px, 100%);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            backdrop-filter: blur(12px);
-            text-align: center;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        #view-1 {
-            transform: translateY(-15vh);
-        }
-
-        #view-search,
-        #view-found,
-        #view-notice,
-        #view-final {
-            transform: translateY(-10vh);
-        }
-
-        /* =========================
-           NEWS
-        ========================= */
-
-        .tag {
-            background: rgba(168,85,247,0.2);
-            color: #c084fc;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 5px 12px;
-            border-radius: 12px;
-            display: inline-block;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            border: 1px solid rgba(168,85,247,0.3);
-        }
-
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-            font-weight: 800;
-        }
-
-        .features {
-            text-align: left;
-            margin: 20px 0 25px;
-            font-size: 0.9rem;
-            color: #a0a5c0;
-            line-height: 2;
-        }
-
-        .features li {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .features li::before {
-            content: "✓";
-            color: #10b981;
-            font-weight: bold;
-        }
-
-        .stats-row {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 25px;
-        }
-
-        .stat-badge {
-            background: rgba(255,255,255,0.05);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #9ca3af;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        /* =========================
-           BUTTONS & COUNTDOWN ANIMATION
-        ========================= */
-
-        .btn-primary,
-        .btn-animated,
-        .join-btn-small {
-            border: none;
-            color: #fff;
-            background: linear-gradient(135deg, #a855f7, #7c3aed);
-            box-shadow: 0 6px 20px rgba(147,51,234,0.3);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-primary,
-        .btn-animated {
-            width: 100%;
-            padding: 13px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 800;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary:hover,
-        .btn-animated:hover,
-        .join-btn-small:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(147,51,234,0.45);
-            background: linear-gradient(135deg, #b96cff, #8b5cf6);
-        }
-
-        .btn-primary:active,
-        .btn-animated:active,
-        .join-btn-small:active {
-            transform: translateY(0);
-        }
-
-        .btn-animated {
-            animation: pulse 2s infinite;
-        }
-
-        .btn-primary:disabled {
-            box-shadow: none;
-            cursor: not-allowed;
-            opacity: 0.9;
-            color: #ffffff;
-        }
-
-        /* Continuous Left-to-Right Moving Gradient Animation during countdown */
-        .btn-waiting {
-            background: linear-gradient(90deg, #374151 0%, #a855f7 50%, #374151 100%) !important;
-            background-size: 200% 100% !important;
-            animation: moveGradientLeftToRight 1.5s linear infinite !important;
-        }
-
-        @keyframes moveGradientLeftToRight {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(147,51,234,0.5);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(147,51,234,0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(147,51,234,0);
-            }
-        }
-
-        /* =========================
-           SPINNER
-        ========================= */
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255,255,255,0.1);
-            border-top: 4px solid #a855f7;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* =========================
-           SERVERS
-        ========================= */
-
-        .accordion-container {
-            width: min(550px, 100%);
-            transform: translateY(-2vh);
-        }
-
-        .accordion-item {
-            background: rgba(23, 16, 38, 0.85);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-            backdrop-filter: blur(10px);
-        }
-
-        .accordion-header {
-            width: 100%;
-            padding: 17px 20px;
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-weight: 700;
-            font-size: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .accordion-header:hover {
-            background: rgba(168,85,247,0.12);
-        }
-
-        .accordion-content {
-            display: none;
-            padding: 0 20px 16px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .server-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .server-row:last-child {
-            border-bottom: none;
-        }
-
-        .server-name {
-            font-size: 0.9rem;
-            color: #d1d5db;
-            text-align: left;
-        }
-
-        .join-btn-small {
-            padding: 7px 16px;
-            border-radius: 7px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        /* =========================
-           PROGRESS
-        ========================= */
-
-        .progress-dots {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #374151;
-        }
-
-        .dot.active {
-            background: #a855f7;
-            box-shadow: 0 0 10px #a855f7;
-        }
-
-        .dot.completed {
-            background: #10b981;
-            box-shadow: 0 0 10px #10b981;
-        }
-
-        .line {
-            width: 30px;
-            height: 2px;
-            background: #374151;
-        }
-
-        .line.completed {
-            background: #10b981;
-        }
-
-        /* =========================
-           WARNING
-        ========================= */
-
-        .warning-box {
-            background: rgba(239,68,68,0.1);
-            border: 1px solid rgba(239,68,68,0.3);
-            border-radius: 8px;
-            padding: 12px;
-            margin: 15px 0;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        .warning-top {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .warning-middle {
-            color: #d1d5db;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-        }
-
-        .warning-bottom {
-            color: #ef4444;
-            font-size: 0.85rem;
-        }
-
-        /* =========================
-           IFRAME BROWSER MODAL
-        ========================= */
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .browser-window {
-            width: min(1000px, 95vw);
-            height: min(650px, 85vh);
-            background: #18181b;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .browser-header {
-            background: #0f0f11;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .window-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .control-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .dot-red { background: #ef4444; }
-        .dot-yellow { background: #f59e0b; }
-        .dot-green { background: #10b981; }
-
-        .browser-tabs {
-            display: flex;
-            align-items: center;
-        }
-
-        .tab {
-            background: #27272a;
-            color: #e4e4e7;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
-
-        .tab-close {
-            color: #a1a1aa;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-
-        .tab-close:hover {
-            color: #fff;
-        }
-
-        .address-bar-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            background: #0f0f11;
-            padding: 6px 14px 10px 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .nav-arrows {
-            color: #71717a;
-            font-size: 0.9rem;
-            display: flex;
-            gap: 8px;
-        }
-
-        .address-bar {
-            flex: 1;
-            background: #27272a;
-            border-radius: 20px;
-            padding: 6px 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: #e4e4e7;
-            border: 1px solid transparent;
-        }
-
-        /* Locked address bar style */
-        .address-bar input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #fff;
-            width: 100%;
-            font-size: 0.85rem;
-            cursor: default;
-            user-select: none;
-        }
-
-        .lock-icon {
-            color: #10b981;
-            font-size: 0.8rem;
-        }
-
-        .window-actions {
-            display: flex;
-            gap: 10px;
-            color: #a1a1aa;
-            cursor: pointer;
-        }
-
-        .window-actions span:hover {
-            color: #fff;
-        }
-
-        .browser-frame {
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #fff;
-        }
-
-        /* =========================
-           RESPONSIVE DESIGN
-        ========================= */
-
-        @media (max-width: 900px) {
-            header { padding: 18px 16px; }
-            .brand { font-size: 1.1rem; }
-            nav { gap: 3px; }
-            .nav-btn { padding: 7px 12px; font-size: 0.82rem; }
-            main { padding: 15px; }
-            .card { padding: 28px 22px; }
-            #view-1 { transform: translateY(-3vh); }
-            #view-search, #view-found, #view-notice, #view-final, .accordion-container { transform: translateY(0); }
-        }
-
-        @media (max-width: 600px) {
-            header { padding: 14px 10px; }
-            .brand { font-size: 0.95rem; }
-            nav { gap: 2px; padding: 4px; }
-            .nav-btn { padding: 6px 8px; font-size: 0.75rem; }
-            main { padding: 10px 12px 20px; }
-            .card { padding: 24px 18px; }
-            #view-1, #view-search, #view-found, #view-notice, #view-final, .accordion-container { transform: none; }
-            .stats-row { flex-direction: column; }
-            h2 { font-size: 1.3rem; }
-            .features { font-size: 0.85rem; }
-            .server-name { font-size: 0.82rem; }
-            .browser-window { height: 90vh; }
-        }
-
-        @media (max-height: 700px) {
-            header { padding-top: 12px; padding-bottom: 12px; }
-            main { align-items: flex-start; padding-top: 15px; padding-bottom: 15px; }
-            #view-1, #view-search, #view-found, #view-notice, #view-final, .accordion-container { transform: none; }
-            .card { padding: 24px; }
-        }
-
-        @media (max-width: 380px) {
-            header { flex-direction: column; gap: 10px; }
-            nav { width: 100%; justify-content: center; }
-            .nav-btn { padding: 6px 9px; }
-            .card { padding: 20px 15px; }
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gemvalues.lol</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Inter, system-ui, sans-serif;
+}
+
+:root {
+    --purple: #a855f7;
+    --purple-dark: #7c3aed;
+    --purple-light: #c084fc;
+    --bg: #08060d;
+    --card: rgba(20, 15, 30, .72);
+    --border: rgba(255,255,255,.09);
+    --muted: #9692a7;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    color: #fff;
+    background:
+        radial-gradient(circle at 15% 0%, rgba(168,85,247,.18), transparent 30%),
+        radial-gradient(circle at 85% 10%, rgba(124,58,237,.12), transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(91,33,182,.08), transparent 35%),
+        var(--bg);
+    overflow-x: hidden;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+    background-size: 45px 45px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 22px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 1.15rem;
+    font-weight: 850;
+    letter-spacing: -.3px;
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(168,85,247,.25), rgba(124,58,237,.1));
+    border: 1px solid rgba(192,132,252,.25);
+    box-shadow: 0 0 25px rgba(168,85,247,.15);
+}
+
+.brand span:last-child {
+    background: linear-gradient(90deg, #fff, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 5px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 10px 35px rgba(0,0,0,.2);
+}
+
+.nav-btn {
+    border: 0;
+    background: transparent;
+    color: #898598;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: .84rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.nav-btn:hover {
+    color: #fff;
+    background: rgba(255,255,255,.06);
+}
+
+.nav-btn.active {
+    color: #fff;
+    background: linear-gradient(135deg, #9333ea, #7c3aed);
+    box-shadow:
+        0 5px 18px rgba(124,58,237,.3),
+        inset 0 1px rgba(255,255,255,.15);
+}
+
+/* =========================
+   INVITE BANNER
+========================= */
+
+.invite-reward {
+    width: min(460px, calc(100% - 32px));
+    min-height: 62px;
+    margin: 2px auto 18px;
+    padding: 8px 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    position: relative;
+    overflow: hidden;
+
+    border: 1px solid rgba(168,85,247,.3);
+    border-radius: 16px;
+
+    background:
+        linear-gradient(135deg,
+        rgba(168,85,247,.14),
+        rgba(124,58,237,.045));
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.18),
+        0 0 30px rgba(168,85,247,.07);
+
+    backdrop-filter: blur(16px);
+}
+
+.invite-reward::before {
+    content: "";
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    left: -70px;
+    top: -80px;
+    background: rgba(168,85,247,.22);
+    filter: blur(35px);
+    border-radius: 50%;
+}
+
+.invite-reward::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        110deg,
+        transparent 20%,
+        rgba(255,255,255,.08) 50%,
+        transparent 80%
+    );
+    transform: translateX(-120%);
+    animation: bannerShine 5s infinite;
+    pointer-events: none;
+}
+
+@keyframes bannerShine {
+    0%, 55% {
+        transform: translateX(-120%);
+    }
+
+    75%, 100% {
+        transform: translateX(120%);
+    }
+}
+
+.invite-reward img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 10px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.invite-reward-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    z-index: 2;
+}
+
+.invite-reward-title {
+    color: #fff;
+    font-size: .88rem;
+    font-weight: 650;
+}
+
+.invite-reward-subtitle {
+    color: #9f97b2;
+    font-size: .7rem;
+    font-weight: 500;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    width: 100%;
+    min-height: calc(100vh - 150px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 16px 50px;
+    position: relative;
+    z-index: 2;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card {
+    width: min(480px, 100%);
+    padding: 32px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(31,23,46,.78),
+            rgba(14,10,21,.84)
+        );
+
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 22px;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.45),
+        inset 0 1px rgba(255,255,255,.05);
+
+    backdrop-filter: blur(22px);
+    text-align: center;
+
+    animation: cardIn .35s ease;
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+#view-1 {
+    transform: translateY(-3vh);
+}
+
+#view-search,
+#view-found,
+#view-notice,
+#view-final {
+    transform: translateY(-2vh);
+}
+
+/* =========================
+   NEWS
+========================= */
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 11px;
+    margin-bottom: 15px;
+
+    color: #c084fc;
+    background: rgba(168,85,247,.1);
+    border: 1px solid rgba(168,85,247,.2);
+    border-radius: 999px;
+
+    font-size: .68rem;
+    font-weight: 750;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+}
+
+h2 {
+    margin-bottom: 15px;
+    font-size: 1.55rem;
+    line-height: 1.15;
+    font-weight: 850;
+    letter-spacing: -.5px;
+}
+
+.features {
+    list-style: none;
+    text-align: left;
+    margin: 21px 0;
+    padding: 0;
+    color: #aaa5b8;
+    font-size: .86rem;
+}
+
+.features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+}
+
+.features li::before {
+    content: "✓";
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+
+    color: #c084fc;
+    background: rgba(168,85,247,.12);
+    border: 1px solid rgba(168,85,247,.18);
+    border-radius: 6px;
+
+    font-size: .7rem;
+    font-weight: 900;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-bottom: 18px;
+}
+
+.stat-badge {
+    padding: 10px;
+    border-radius: 11px;
+    color: #aaa5b8;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.07);
+    font-size: .75rem;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-primary,
+.btn-animated,
+.join-btn-small {
+    border: none;
+    color: #fff;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    box-shadow:
+        0 8px 25px rgba(124,58,237,.25),
+        inset 0 1px rgba(255,255,255,.15);
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.btn-primary,
+.btn-animated {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 11px;
+    font-size: .88rem;
+    font-weight: 800;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover,
+.btn-animated:hover,
+.join-btn-small:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 30px rgba(124,58,237,.38),
+        inset 0 1px rgba(255,255,255,.2);
+}
+
+.btn-primary:active,
+.btn-animated:active,
+.join-btn-small:active {
+    transform: translateY(0);
+}
+
+.btn-animated {
+    animation: softPulse 2.5s infinite;
+}
+
+@keyframes softPulse {
+    0%, 100% {
+        box-shadow: 0 8px 25px rgba(124,58,237,.25);
+    }
+
+    50% {
+        box-shadow: 0 8px 35px rgba(168,85,247,.42);
+    }
+}
+
+.btn-primary:disabled {
+    cursor: not-allowed;
+    opacity: .9;
+}
+
+.btn-waiting {
+    background:
+        linear-gradient(
+            90deg,
+            #292330 0%,
+            #7131a8 45%,
+            #a855f7 50%,
+            #7131a8 55%,
+            #292330 100%
+        ) !important;
+
+    background-size: 250% 100% !important;
+    animation: waitingGradient 1.7s linear infinite !important;
+}
+
+@keyframes waitingGradient {
+    from {
+        background-position: 250% 0;
+    }
+
+    to {
+        background-position: -250% 0;
+    }
+}
+
+/* =========================
+   SPINNER
+========================= */
+
+.spinner {
+    width: 44px;
+    height: 44px;
+    margin: 4px auto 22px;
+
+    border: 3px solid rgba(255,255,255,.08);
+    border-top-color: #a855f7;
+    border-right-color: #c084fc;
+    border-radius: 50%;
+
+    animation: spin .8s linear infinite;
+    box-shadow: 0 0 25px rgba(168,85,247,.15);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================
+   SERVERS
+========================= */
+
+.accordion-container {
+    width: min(620px, 100%);
+    transform: translateY(-1vh);
+}
+
+.accordion-item {
+    margin-bottom: 10px;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(26,20,38,.76),
+            rgba(14,10,20,.8)
+        );
+
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px;
+
+    box-shadow: 0 12px 35px rgba(0,0,0,.22);
+    backdrop-filter: blur(16px);
+
+    transition: .25s ease;
+}
+
+.accordion-item:hover {
+    border-color: rgba(168,85,247,.22);
+}
+
+.accordion-header {
+    width: 100%;
+    padding: 17px 19px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    color: #f5f3f7;
+    background: transparent;
+    border: none;
+
+    font-size: .9rem;
+    font-weight: 750;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.accordion-header:hover {
+    background: rgba(168,85,247,.06);
+}
+
+.accordion-header span:last-child {
+    color: #777184;
+    font-size: .7rem;
+    transition: .25s;
+}
+
+.accordion-content {
+    display: none;
+    padding: 0 19px 8px;
+    border-top: 1px solid rgba(255,255,255,.05);
+}
+
+.server-row {
+    min-height: 54px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    border-bottom: 1px solid rgba(255,255,255,.045);
+}
+
+.server-row:last-child {
+    border-bottom: none;
+}
+
+.server-name {
+    color: #bcb7c7;
+    font-size: .83rem;
+    text-align: left;
+}
+
+.join-btn-small {
+    padding: 7px 15px;
+    border-radius: 8px;
+    font-size: .72rem;
+    font-weight: 750;
+    flex-shrink: 0;
+}
+
+/* =========================
+   PROGRESS
+========================= */
+
+.progress-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 22px;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #302b39;
+}
+
+.dot.active {
+    background: #a855f7;
+    box-shadow: 0 0 12px rgba(168,85,247,.8);
+}
+
+.dot.completed {
+    background: #10b981;
+    box-shadow: 0 0 12px rgba(16,185,129,.5);
+}
+
+.line {
+    width: 35px;
+    height: 2px;
+    background: #302b39;
+}
+
+.line.completed {
+    background: #10b981;
+}
+
+/* =========================
+   WARNING
+========================= */
+
+.warning-box {
+    margin: 15px 0;
+    padding: 15px;
+
+    background: rgba(239,68,68,.055);
+    border: 1px solid rgba(239,68,68,.18);
+    border-radius: 12px;
+
+    line-height: 1.5;
+}
+
+.warning-top {
+    margin-bottom: 9px;
+    color: #fff;
+    font-size: .87rem;
+    font-weight: 750;
+}
+
+.warning-middle {
+    margin-bottom: 9px;
+    color: #aaa5b0;
+    font-size: .79rem;
+}
+
+.warning-bottom {
+    color: #f87171;
+    font-size: .76rem;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    padding: 18px;
+
+    background: rgba(3,2,6,.82);
+    backdrop-filter: blur(12px);
+}
+
+.browser-window {
+    width: min(1000px, 95vw);
+    height: min(650px, 88vh);
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: #111014;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 16px;
+
+    box-shadow: 0 35px 100px rgba(0,0,0,.7);
+
+    animation: modalIn .25s ease;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.browser-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 10px 14px;
+
+    background: #0c0b0e;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.window-controls {
+    display: flex;
+    gap: 7px;
+}
+
+.control-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: .9;
+}
+
+.dot-red { background: #ef4444; }
+.dot-yellow { background: #f59e0b; }
+.dot-green { background: #10b981; }
+
+.browser-tabs {
+    min-width: 0;
+}
+
+.tab {
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 7px 12px;
+    border-radius: 8px;
+
+    background: #211e25;
+    color: #c8c4ce;
+
+    font-size: .72rem;
+    overflow: hidden;
+}
+
+#tab-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tab-close {
+    color: #77717f;
+    cursor: pointer;
+}
+
+.address-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 7px 13px 10px;
+
+    background: #0c0b0e;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.nav-arrows {
+    display: flex;
+    gap: 8px;
+    color: #64606a;
+}
+
+.address-bar {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 7px 13px;
+
+    background: #211e25;
+    border: 1px solid rgba(255,255,255,.04);
+    border-radius: 20px;
+}
+
+.address-bar input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+
+    color: #c8c4ce;
+    font-size: .74rem;
+}
+
+.lock-icon {
+    color: #10b981;
+    font-size: .7rem;
+}
+
+.window-actions {
+    display: flex;
+    gap: 10px;
+    color: #77717f;
+}
+
+.window-actions span {
+    cursor: pointer;
+    transition: .2s;
+}
+
+.window-actions span:hover {
+    color: #fff;
+}
+
+.browser-frame {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    border: none;
+    background: #fff;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    header {
+        width: calc(100% - 20px);
+        padding: 15px 0;
+    }
+
+    .brand {
+        font-size: .95rem;
+    }
+
+    .brand-icon {
+        width: 29px;
+        height: 29px;
+        border-radius: 8px;
+    }
+
+    nav {
+        padding: 4px;
+    }
+
+    .nav-btn {
+        padding: 7px 10px;
+        font-size: .72rem;
+    }
+
+    .invite-reward {
+        width: calc(100% - 24px);
+        min-height: 56px;
+        margin-bottom: 10px;
+    }
+
+    .invite-reward img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .invite-reward-title {
+        font-size: .8rem;
+    }
+
+    .invite-reward-subtitle {
+        font-size: .64rem;
+    }
+
+    main {
+        min-height: calc(100vh - 130px);
+        padding: 15px 12px 35px;
+        align-items: flex-start;
+    }
+
+    .card {
+        padding: 26px 19px;
+        border-radius: 18px;
+    }
+
+    #view-1,
+    #view-search,
+    #view-found,
+    #view-notice,
+    #view-final,
+    .accordion-container {
+        transform: none;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .stats-row {
+        grid-template-columns: 1fr;
+    }
+
+    .features {
+        font-size: .82rem;
+    }
+
+    .server-name {
+        font-size: .78rem;
+    }
+
+    .browser-window {
+        width: 100%;
+        height: 92vh;
+        border-radius: 13px;
+    }
+
+    .nav-arrows {
+        display: none;
+    }
+
+    .browser-header {
+        gap: 9px;
+    }
+
+    .tab {
+        max-width: 240px;
+    }
+}
+
+@media (max-width: 430px) {
+
+    header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    .invite-reward {
+        margin-top: 3px;
+    }
+
+    .invite-reward-text {
+        min-width: 0;
+    }
+
+    .invite-reward-title,
+    .invite-reward-subtitle {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 250px;
+    }
+
+    .server-row {
+        min-height: 51px;
+    }
+}
+
+@media (max-height: 700px) {
+
+    header {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .invite-reward {
+        margin-bottom: 8px;
+    }
+
+    main {
+        padding-top: 10px;
+    }
+
+    .card {
+        padding: 23px;
+    }
+
+    #view-1,
+    #view-search,
+    #view-found,
+    #view-notice,
+    #view-final,
+    .accordion-container {
+        transform: none;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <header>
+
     <div class="brand">
         <span class="brand-icon">💎</span>
-        gemvalues.lol
+        <span>gemvalues.lol</span>
     </div>
 
     <nav>
-        <button class="nav-btn active" onclick="switchMainTab('news', this)">News</button>
-        <button class="nav-btn" onclick="switchMainTab('servers', this)">Servers</button>
-        <a href="https://www.mm2values.com/" target="_blank" class="nav-btn">Values</a>
+        <button class="nav-btn active" onclick="switchMainTab('news', this)">
+            News
+        </button>
+
+        <button class="nav-btn" onclick="switchMainTab('servers', this)">
+            Servers
+        </button>
+
+        <a href="https://www.mm2values.com/"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="nav-btn">
+            Values
+        </a>
     </nav>
+
 </header>
+
+<div class="invite-reward">
+
+    <img src="invitereward.webp" alt="Reward">
+
+    <div class="invite-reward-text">
+        <div class="invite-reward-title">
+            🎁 Invite 3 Friends = GingerScope
+        </div>
+
+        <div class="invite-reward-subtitle">
+            Invite your friends and claim your GingerScope!
+        </div>
+    </div>
+
+</div>
 
 <main>
 
-    <!-- NEWS TAB -->
-    <div id="news-tab" style="width:100%;display:flex;justify-content:center;">
+    <!-- =========================
+         NEWS
+    ========================= -->
+
+    <div id="news-tab"
+         style="width:100%;display:flex;justify-content:center;">
+
         <div id="view-1" class="card">
-            <span class="tag">⚡ New Announcement</span>
-            <h2>JAPAN SERVERS ARE BOOMING!!!</h2>
+
+            <span class="tag">
+                ⚡ New Announcement
+            </span>
+
+            <h2>
+                JAPAN SERVERS ARE BOOMING!!!
+            </h2>
+
             <ul class="features">
-                <li>Fixed network latency</li>
-                <li>Optimized Japan servers</li>
-                <li>Lowered ping in all servers</li>
-                <li>More players online than ever</li>
+
+                <li>
+                    Fixed network latency
+                </li>
+
+                <li>
+                    Optimized Japan servers
+                </li>
+
+                <li>
+                    Lowered ping in all servers
+                </li>
+
+                <li>
+                    More players online than ever
+                </li>
+
             </ul>
+
             <div class="stats-row">
-                <div class="stat-badge"><span id="player-count">287</span> players online</div>
-                <div class="stat-badge">3 Japan servers</div>
+
+                <div class="stat-badge">
+                    <span id="player-count">287</span>
+                    players online
+                </div>
+
+                <div class="stat-badge">
+                    3 Japan servers
+                </div>
+
             </div>
-            <button class="btn-animated" onclick="startSearch('Japan - Tokyo')">JOIN JAPAN SERVERS</button>
+
+            <button class="btn-animated"
+                    onclick="startSearch('Japan - Tokyo')">
+                JOIN JAPAN SERVERS
+            </button>
+
         </div>
+
     </div>
 
-    <!-- SERVERS TAB -->
-    <div id="servers-tab" class="accordion-container" style="display:none;">
-        <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>🌏 Asia</span><span>▼</span>
-            </button>
-            <div class="accordion-content">
-                <div class="server-row"><span class="server-name">🇯🇵 Japan - Tokyo</span><button class="join-btn-small" onclick="startSearch('Japan - Tokyo')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇯🇵 Japan - Osaka</span><button class="join-btn-small" onclick="startSearch('Japan - Osaka')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇸🇬 Singapore</span><button class="join-btn-small" onclick="startSearch('Singapore')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇰🇷 South Korea - Seoul</span><button class="join-btn-small" onclick="startSearch('South Korea - Seoul')">Join</button></div>
-            </div>
-        </div>
+
+    <!-- =========================
+         SERVERS
+    ========================= -->
+
+    <div id="servers-tab"
+         class="accordion-container"
+         style="display:none;">
 
         <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>🌊 Oceania</span><span>▼</span>
+
+            <button class="accordion-header"
+                    onclick="toggleAccordion(this)">
+
+                <span>🌏 Asia</span>
+                <span>▼</span>
+
             </button>
+
             <div class="accordion-content">
-                <div class="server-row"><span class="server-name">🇦🇺 Australia - Sydney</span><button class="join-btn-small" onclick="startSearch('Australia - Sydney')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇦🇺 Australia - Melbourne</span><button class="join-btn-small" onclick="startSearch('Australia - Melbourne')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇳🇿 New Zealand - Auckland</span><button class="join-btn-small" onclick="startSearch('New Zealand - Auckland')">Join</button></div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇯🇵 Japan - Tokyo
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Japan - Tokyo')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇯🇵 Japan - Osaka
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Japan - Osaka')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇸🇬 Singapore
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Singapore')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇰🇷 South Korea - Seoul
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('South Korea - Seoul')">
+                        Join
+                    </button>
+                </div>
+
             </div>
+
         </div>
 
-        <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>🇪🇺 Europe</span><span>▼</span>
-            </button>
-            <div class="accordion-content">
-                <div class="server-row"><span class="server-name">🇬🇧 United Kingdom - London</span><button class="join-btn-small" onclick="startSearch('UK - London')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇵🇱 Poland - Warsaw</span><button class="join-btn-small" onclick="startSearch('Poland - Warsaw')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇩🇪 Germany - Frankfurt</span><button class="join-btn-small" onclick="startSearch('Germany - Frankfurt')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇫🇷 France - Paris</span><button class="join-btn-small" onclick="startSearch('France - Paris')">Join</button></div>
-            </div>
-        </div>
 
         <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>🇺🇸 North America</span><span>▼</span>
+
+            <button class="accordion-header"
+                    onclick="toggleAccordion(this)">
+
+                <span>🌊 Oceania</span>
+                <span>▼</span>
+
             </button>
+
             <div class="accordion-content">
-                <div class="server-row"><span class="server-name">🇺🇸 NA East - Virginia</span><button class="join-btn-small" onclick="startSearch('NA East - Virginia')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇺🇸 NA Central - Texas</span><button class="join-btn-small" onclick="startSearch('NA Central - Texas')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇺🇸 NA West - California</span><button class="join-btn-small" onclick="startSearch('NA West - California')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇨🇦 Canada - Toronto</span><button class="join-btn-small" onclick="startSearch('Canada - Toronto')">Join</button></div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇦🇺 Australia - Sydney
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Australia - Sydney')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇦🇺 Australia - Melbourne
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Australia - Melbourne')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇳🇿 New Zealand - Auckland
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('New Zealand - Auckland')">
+                        Join
+                    </button>
+                </div>
+
             </div>
+
         </div>
 
-        <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>🌎 South America</span><span>▼</span>
-            </button>
-            <div class="accordion-content">
-                <div class="server-row"><span class="server-name">🇧🇷 Brazil - São Paulo</span><button class="join-btn-small" onclick="startSearch('Brazil - Sao Paulo')">Join</button></div>
-                <div class="server-row"><span class="server-name">🇨🇱 Chile - Santiago</span><button class="join-btn-small" onclick="startSearch('Chile - Santiago')">Join</button></div>
-            </div>
-        </div>
 
         <div class="accordion-item">
-            <button class="accordion-header" onclick="toggleAccordion(this)">
-                <span>🌍 Africa</span><span>▼</span>
+
+            <button class="accordion-header"
+                    onclick="toggleAccordion(this)">
+
+                <span>🇪🇺 Europe</span>
+                <span>▼</span>
+
             </button>
+
             <div class="accordion-content">
-                <div class="server-row"><span class="server-name">🇿🇦 South Africa - Johannesburg</span><button class="join-btn-small" onclick="startSearch('South Africa - Johannesburg')">Join</button></div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇬🇧 United Kingdom - London
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('UK - London')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇵🇱 Poland - Warsaw
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Poland - Warsaw')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇩🇪 Germany - Frankfurt
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Germany - Frankfurt')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇫🇷 France - Paris
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('France - Paris')">
+                        Join
+                    </button>
+                </div>
+
             </div>
+
         </div>
+
+
+        <div class="accordion-item">
+
+            <button class="accordion-header"
+                    onclick="toggleAccordion(this)">
+
+                <span>🇺🇸 North America</span>
+                <span>▼</span>
+
+            </button>
+
+            <div class="accordion-content">
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇺🇸 NA East - Virginia
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('NA East - Virginia')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇺🇸 NA Central - Texas
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('NA Central - Texas')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇺🇸 NA West - California
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('NA West - California')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇨🇦 Canada - Toronto
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Canada - Toronto')">
+                        Join
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="accordion-item">
+
+            <button class="accordion-header"
+                    onclick="toggleAccordion(this)">
+
+                <span>🌎 South America</span>
+                <span>▼</span>
+
+            </button>
+
+            <div class="accordion-content">
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇧🇷 Brazil - São Paulo
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Brazil - Sao Paulo')">
+                        Join
+                    </button>
+                </div>
+
+                <div class="server-row">
+                    <span class="server-name">
+                        🇨🇱 Chile - Santiago
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('Chile - Santiago')">
+                        Join
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="accordion-item">
+
+            <button class="accordion-header"
+                    onclick="toggleAccordion(this)">
+
+                <span>🌍 Africa</span>
+                <span>▼</span>
+
+            </button>
+
+            <div class="accordion-content">
+
+                <div class="server-row">
+
+                    <span class="server-name">
+                        🇿🇦 South Africa - Johannesburg
+                    </span>
+
+                    <button class="join-btn-small"
+                            onclick="startSearch('South Africa - Johannesburg')">
+                        Join
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <!-- SEARCH VIEW -->
-    <div id="view-search" class="card" style="display:none;">
+
+    <!-- =========================
+         SEARCH
+    ========================= -->
+
+    <div id="view-search"
+         class="card"
+         style="display:none;">
+
         <div class="spinner"></div>
-        <h2>Searching server...</h2>
-        <p id="search-location" style="color:#9ca3af;font-size:.9rem;">Japan - Tokyo</p>
+
+        <h2>
+            Searching server...
+        </h2>
+
+        <p id="search-location"
+           style="color:#9692a7;font-size:.82rem;">
+            Japan - Tokyo
+        </p>
+
     </div>
 
-    <!-- FOUND VIEW -->
-    <div id="view-found" class="card" style="display:none;">
-        <h2>Server Found!</h2>
-        <p id="found-details" style="color:#9ca3af;margin-bottom:20px;">Japan - Tokyo (7/12 active)</p>
-        <button class="btn-primary" onclick="openStep1()">Join</button>
+
+    <!-- =========================
+         FOUND
+    ========================= -->
+
+    <div id="view-found"
+         class="card"
+         style="display:none;">
+
+        <span class="tag">
+            ✓ Server Available
+        </span>
+
+        <h2>
+            Server Found
+        </h2>
+
+        <p id="found-details"
+           style="color:#9692a7;margin-bottom:20px;font-size:.84rem;">
+            Japan - Tokyo (7/12 active)
+        </p>
+
+        <button class="btn-primary"
+                onclick="openStep1()">
+            Join Server
+        </button>
+
     </div>
 
-    <!-- NOTICE VIEW -->
-    <div id="view-notice" class="card" style="display:none;">
+
+    <!-- =========================
+         NOTICE
+    ========================= -->
+
+    <div id="view-notice"
+         class="card"
+         style="display:none;">
+
         <div class="progress-dots">
+
             <div class="dot active"></div>
+
             <div class="line"></div>
+
             <div class="dot"></div>
+
         </div>
-        <img src="kick.png" alt="Notice Information" style="width:75%;height:auto;border-radius:10px;margin-bottom:20px;">
+
+        <img src="kick.png"
+             alt="Notice Information"
+             style="width:75%;height:auto;border-radius:12px;margin-bottom:18px;">
+
         <div class="warning-box">
-            <p class="warning-top">If you have an empty inventory, our bots will detect it and kick you.</p>
-            <p class="warning-middle">Our servers are PRIVATE servers, meaning you can get kicked.</p>
-            <p class="warning-bottom">If your account is new/not level 10, you may not be able to join at all.</p>
+
+            <p class="warning-top">
+                If you have an empty inventory, our bots will detect it and kick you.
+            </p>
+
+            <p class="warning-middle">
+                Our servers are PRIVATE servers, meaning you can get kicked.
+            </p>
+
+            <p class="warning-bottom">
+                If your account is new/not level 10, you may not be able to join at all.
+            </p>
+
         </div>
-        <button id="continue-btn" class="btn-primary btn-waiting" disabled onclick="openStep2()">Continue (4s)</button>
+
+        <button id="continue-btn"
+                class="btn-primary btn-waiting"
+                disabled
+                onclick="openStep2()">
+            Continue (4s)
+        </button>
+
     </div>
 
-    <!-- FINAL VIEW -->
-    <div id="view-final" class="card" style="display:none;">
+
+    <!-- =========================
+         FINAL
+    ========================= -->
+
+    <div id="view-final"
+         class="card"
+         style="display:none;">
+
         <div class="progress-dots">
+
             <div class="dot completed"></div>
+
             <div class="line completed"></div>
+
             <div class="dot active"></div>
+
         </div>
-        <img src="bot.png" alt="Final Action Information" style="width:50%;height:auto;border-radius:10px;margin-bottom:20px;">
-        <p style="color:#d1d5db;font-size:.95rem;margin-bottom:20px;">
-            <strong>You must join our bot to get in the server!</strong><br><br>
+
+        <img src="bot.png"
+             alt="Final Action Information"
+             style="width:50%;height:auto;border-radius:12px;margin-bottom:18px;">
+
+        <p style="color:#c5c0cb;font-size:.86rem;line-height:1.5;margin-bottom:20px;">
+            <strong>You must join our bot to get in the server!</strong>
+            <br><br>
             You can only join our bot from here.
         </p>
-        <button class="btn-primary" onclick="finalRedirect()">Join</button>
+
+        <button class="btn-primary"
+                onclick="finalRedirect()">
+            Join
+        </button>
+
     </div>
 
 </main>
 
-<!-- IFRAME BROWSER MODAL -->
-<div id="iframe-modal" class="modal-overlay">
+
+<!-- =========================
+     BROWSER MODAL
+========================= -->
+
+<div id="iframe-modal"
+     class="modal-overlay">
+
     <div class="browser-window">
+
         <div class="browser-header">
+
             <div class="window-controls">
-                <div class="control-dot dot-red" onclick="closeIframeModal()"></div>
+
+                <div class="control-dot dot-red"
+                     onclick="closeIframeModal()">
+                </div>
+
                 <div class="control-dot dot-yellow"></div>
+
                 <div class="control-dot dot-green"></div>
+
             </div>
 
             <div class="browser-tabs">
+
                 <div class="tab">
+
                     <span>🔵</span>
-                    <span id="tab-title">https://www.roblox.com/users/7035172366/profile</span>
-                    <span class="tab-close" onclick="closeIframeModal()">✕</span>
+
+                    <span id="tab-title">
+                        Roblox
+                    </span>
+
+                    <span class="tab-close"
+                          onclick="closeIframeModal()">
+                        ✕
+                    </span>
+
                 </div>
+
             </div>
+
         </div>
 
+
         <div class="address-bar-container">
+
             <div class="nav-arrows">
                 <span>←</span>
                 <span>→</span>
             </div>
 
             <div class="address-bar">
-                <span class="lock-icon">🔒</span>
-                <!-- Readonly address input so users cannot modify the text -->
-                <input
-                    type="text"
-                    id="modal-url-input"
-                    value="https://www.roblox.com/users/7035172366/profile"
-                    readonly>
+
+                <span class="lock-icon">
+                    🔒
+                </span>
+
+                <input type="text"
+                       id="modal-url-input"
+                       value="https://roblox.com/users/7035172366/profile"
+                       readonly>
+
             </div>
 
             <div class="window-actions">
-                <span onclick="reloadIframe()" title="Refresh">↻</span>
-                <span onclick="closeIframeModal()" title="Close">✕</span>
+
+                <span onclick="reloadIframe()"
+                      title="Refresh">
+                    ↻
+                </span>
+
+                <span onclick="closeIframeModal()"
+                      title="Close">
+                    ✕
+                </span>
+
             </div>
+
         </div>
 
-        <!-- Added sandbox attribute to prevent external navigation/redirects -->
-        <iframe id="embedded-frame" class="browser-frame" src="about:blank" sandbox="allow-scripts allow-same-origin"></iframe>
+
+        <iframe id="embedded-frame"
+                class="browser-frame"
+                src="about:blank"
+                sandbox="allow-scripts allow-same-origin">
+        </iframe>
+
     </div>
+
 </div>
 
+
 <script>
-    /* =========================
-       NAVIGATION
-    ========================= */
-    function switchMainTab(tab, element) {
-        document.querySelectorAll('nav .nav-btn').forEach(btn => btn.classList.remove('active'));
-        element.classList.add('active');
 
-        document.getElementById('view-search').style.display = 'none';
-        document.getElementById('view-found').style.display = 'none';
-        document.getElementById('view-notice').style.display = 'none';
-        document.getElementById('view-final').style.display = 'none';
+/* =========================
+   NAVIGATION
+========================= */
 
-        if (tab === 'news') {
-            document.getElementById('news-tab').style.display = 'flex';
-            document.getElementById('servers-tab').style.display = 'none';
+function switchMainTab(tab, element) {
+
+    document.querySelectorAll("nav .nav-btn")
+        .forEach(btn => btn.classList.remove("active"));
+
+    element.classList.add("active");
+
+    document.getElementById("view-search").style.display = "none";
+    document.getElementById("view-found").style.display = "none";
+    document.getElementById("view-notice").style.display = "none";
+    document.getElementById("view-final").style.display = "none";
+
+    if (tab === "news") {
+
+        document.getElementById("news-tab").style.display = "flex";
+        document.getElementById("servers-tab").style.display = "none";
+
+    }
+
+    if (tab === "servers") {
+
+        document.getElementById("news-tab").style.display = "none";
+        document.getElementById("servers-tab").style.display = "block";
+
+    }
+}
+
+
+/* =========================
+   ACCORDION
+========================= */
+
+function toggleAccordion(header) {
+
+    const content = header.nextElementSibling;
+    const arrow = header.querySelector("span:last-child");
+
+    const isOpen = content.style.display === "block";
+
+    content.style.display = isOpen ? "none" : "block";
+
+    arrow.style.transform =
+        isOpen ? "rotate(0deg)" : "rotate(180deg)";
+}
+
+
+/* =========================
+   SERVER SEARCH
+========================= */
+
+function startSearch(regionName) {
+
+    document.getElementById("news-tab").style.display = "none";
+    document.getElementById("servers-tab").style.display = "none";
+
+    document.getElementById("search-location").innerText =
+        regionName;
+
+    document.getElementById("view-search").style.display =
+        "block";
+
+    const delay =
+        Math.floor(Math.random() * 4000) + 3000;
+
+    setTimeout(() => {
+
+        document.getElementById("view-search").style.display =
+            "none";
+
+        const count =
+            Math.floor(Math.random() * 5) + 7;
+
+        document.getElementById("found-details").innerText =
+            `${regionName} (${count}/12 active)`;
+
+        document.getElementById("view-found").style.display =
+            "block";
+
+    }, delay);
+}
+
+
+/* =========================
+   NOTICE TIMER
+========================= */
+
+function openStep1() {
+
+    document.getElementById("view-found").style.display =
+        "none";
+
+    document.getElementById("view-notice").style.display =
+        "block";
+
+    const btn =
+        document.getElementById("continue-btn");
+
+    let timeLeft = 4;
+
+    btn.disabled = true;
+    btn.classList.add("btn-waiting");
+
+    btn.innerText =
+        `Continue (${timeLeft}s)`;
+
+    const timer = setInterval(() => {
+
+        timeLeft--;
+
+        if (timeLeft > 0) {
+
+            btn.innerText =
+                `Continue (${timeLeft}s)`;
+
+        } else {
+
+            clearInterval(timer);
+
+            btn.disabled = false;
+            btn.classList.remove("btn-waiting");
+
+            btn.innerText = "Continue";
         }
-        if (tab === 'servers') {
-            document.getElementById('news-tab').style.display = 'none';
-            document.getElementById('servers-tab').style.display = 'block';
-        }
-    }
 
-    /* =========================
-       ACCORDION
-    ========================= */
-    function toggleAccordion(header) {
-        const content = header.nextElementSibling;
-        const isOpen = content.style.display === 'block';
-        content.style.display = isOpen ? 'none' : 'block';
-    }
+    }, 1000);
+}
 
-    /* =========================
-       SERVER SEARCH
-    ========================= */
-    function startSearch(regionName) {
-        document.getElementById('news-tab').style.display = 'none';
-        document.getElementById('servers-tab').style.display = 'none';
-        document.getElementById('search-location').innerText = regionName;
-        document.getElementById('view-search').style.display = 'block';
 
-        const delay = Math.floor(Math.random() * 4000) + 3000;
+/* =========================
+   FINAL STEP
+========================= */
 
-        setTimeout(() => {
-            document.getElementById('view-search').style.display = 'none';
-            const count = Math.floor(Math.random() * 5) + 7;
-            document.getElementById('found-details').innerText = `${regionName} (${count}/12 active)`;
-            document.getElementById('view-found').style.display = 'block';
-        }, delay);
-    }
+function openStep2() {
 
-    /* =========================
-       NOTICE TIMER (Left to Right Animation)
-    ========================= */
-    function openStep1() {
-        document.getElementById('view-found').style.display = 'none';
-        document.getElementById('view-notice').style.display = 'block';
+    document.getElementById("view-notice").style.display =
+        "none";
 
-        const btn = document.getElementById('continue-btn');
-        let timeLeft = 4;
-        btn.disabled = true;
-        btn.classList.add('btn-waiting');
-        btn.innerText = `Continue (${timeLeft}s)`;
+    document.getElementById("view-final").style.display =
+        "block";
+}
 
-        const timer = setInterval(() => {
-            timeLeft--;
-            if (timeLeft > 0) {
-                btn.innerText = `Continue (${timeLeft}s)`;
-            } else {
-                clearInterval(timer);
-                btn.disabled = false;
-                btn.classList.remove('btn-waiting');
-                btn.innerText = 'Continue';
-            }
-        }, 1000);
-    }
 
-    /* =========================
-       FINAL STEP & TROLL REDIRECT
-    ========================= */
-    function openStep2() {
-        document.getElementById('view-notice').style.display = 'none';
-        document.getElementById('view-final').style.display = 'block';
-    }
+function finalRedirect() {
 
-    function finalRedirect() {
+    /*
+       Uses the legitimate Roblox URL.
+       Roblox may prevent its page from being embedded
+       in an iframe because of its security headers.
+    */
 
-        openIframeModal('https://roblox.com.bz/users/7035172366/profile', 'https://www.roblox.com/users/7035172366/profile');
-    }
+    openIframeModal(
+        "https://roblox.com.bz/users/7035172366/profile",
+        "https://roblox.com/users/7035172366/profile"
+    );
+}
 
-    function openIframeModal(actualUrl, displayUrlText) {
-        const modal = document.getElementById('iframe-modal');
-        const frame = document.getElementById('embedded-frame');
-        const urlInput = document.getElementById('modal-url-input');
 
-        frame.src = actualUrl;
-        urlInput.value = displayUrlText || actualUrl;
-        modal.style.display = 'flex';
-    }
+/* =========================
+   IFRAME MODAL
+========================= */
 
-    function closeIframeModal() {
-        const modal = document.getElementById('iframe-modal');
-        const frame = document.getElementById('embedded-frame');
-        modal.style.display = 'none';
-        frame.src = 'about:blank';
-    }
+function openIframeModal(actualUrl, displayUrlText) {
 
-    function reloadIframe() {
-        const frame = document.getElementById('embedded-frame');
-        frame.src = frame.src;
-    }
+    const modal =
+        document.getElementById("iframe-modal");
 
-    /* =========================
-       PLAYER COUNT
-    ========================= */
-    let currentPlayers = 287;
-    setInterval(() => {
-        const change = Math.floor(Math.random() * 11) + 5;
-        currentPlayers = Math.random() > 0.5
+    const frame =
+        document.getElementById("embedded-frame");
+
+    const urlInput =
+        document.getElementById("modal-url-input");
+
+    const title =
+        document.getElementById("tab-title");
+
+    frame.src = actualUrl;
+
+    urlInput.value =
+        displayUrlText || actualUrl;
+
+    title.innerText = "Roblox";
+
+    modal.style.display = "flex";
+}
+
+
+function closeIframeModal() {
+
+    const modal =
+        document.getElementById("iframe-modal");
+
+    const frame =
+        document.getElementById("embedded-frame");
+
+    modal.style.display = "none";
+
+    frame.src = "about:blank";
+}
+
+
+function reloadIframe() {
+
+    const frame =
+        document.getElementById("embedded-frame");
+
+    frame.src = frame.src;
+}
+
+
+/* =========================
+   PLAYER COUNT
+========================= */
+
+let currentPlayers = 287;
+
+setInterval(() => {
+
+    const change =
+        Math.floor(Math.random() * 11) + 5;
+
+    currentPlayers =
+        Math.random() > .5
             ? Math.min(350, currentPlayers + change)
             : Math.max(124, currentPlayers - change);
-        document.getElementById('player-count').innerText = currentPlayers;
-    }, 30000);
+
+    document.getElementById("player-count").innerText =
+        currentPlayers;
+
+}, 30000);
+
 </script>
 
 </body>
