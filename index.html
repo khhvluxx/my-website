@@ -252,7 +252,7 @@ function schedule(){
   const t0=tok;let n=1;$('cd').textContent='Auto-playing in '+n+'…';
   cdT=setInterval(()=>{n--;if(n>0)$('cd').textContent='Auto-playing in '+n+'…';},1000);
   autoT=setTimeout(()=>{clearInterval(cdT);$('cd').textContent='';
-    if(autoOn&&best&&t0===tok&&view===null&&!game.game_over()&&game.turn()===side)doMove({from:best.from,to:best.to,promotion:best.promotion},true);},3000);}
+    if(autoOn&&best&&t0===tok&&view===null&&!game.game_over()&&game.turn()===side)doMove({from:best.from,to:best.to,promotion:best.promotion},true);},1000);}
 function setAuto(v){autoOn=v;try{localStorage.setItem('auto',v?'1':'0');}catch(e){}
   $('autob').textContent='Auto-play: '+(v?'ON':'OFF');$('autob').className='b'+(v?' pri':'');
   if(!v)cancelAuto();else if(best&&view===null&&game.turn()===side)schedule();}
