@@ -62,7 +62,8 @@ input,textarea{background:var(--bg);color:var(--tx);border:1px solid #444;border
   <div class="card"><h3>Best move</h3><div id="best">…</div><div id="why" class="small" style="margin-top:6px"></div>
    <div id="alts" style="margin-top:8px"></div>
    <div class="row"><button class="b pri" id="play">Play Best Move</button><button class="b" id="re">Re-analyse</button></div>
-   <div class="small" id="eng" style="margin-top:8px"></div></div>
+   <div class="small" id="eng" style="margin-top:8px"></div>
+   <label class="small" style="display:flex;gap:8px;align-items:center;margin-top:6px"><input type="checkbox" id="auto" checked style="width:auto"> Auto-play my move after 3 seconds</label></div>
   <div class="card"><h3>Opponent move</h3>
    <div class="row"><input id="opp" placeholder="e.g. e5, Nf3 or e7e5"><button class="b pri" id="oppb" style="flex:0 0 auto">Opponent Played</button></div>
    <div id="err"></div></div>
@@ -77,7 +78,7 @@ input,textarea{background:var(--bg);color:var(--tx);border:1px solid #444;border
 <script>
 const $=id=>document.getElementById(id);
 const F={p:'♟\uFE0E',n:'♞',b:'♝',r:'♜',q:'♛',k:'♚'};const G={W:F,B:F};
-let game=new Chess(),side='w',flip=false,sel=null,view=null,best=null,tok=0,lines=[];
+let keep=null,autoT=null,game=new Chess(),side='w',flip=false,sel=null,view=null,best=null,tok=0,lines=[];
 const SQ=(f,r)=>'abcdefgh'[f]+(r+1);
 function cur(){ // position being shown
   if(view===null)return game;
@@ -97,7 +98,7 @@ function render(){
     if(lm&&(s===lm.from||s===lm.to))d.classList.add('last');
     if(s===sel)d.classList.add('sel');
     if(s===kingSq)d.classList.add('chk');
-    if(view===null&&best&&(s===best.from||s===best.to))d.classList.add('bm');
+    if(view===null&&(best||keep)&&(s===(best||keep).from||s===(best||keep).to))d.classList.add('bm');
     if(legal[s]){d.classList.add('leg');if(p||legal[s].flags.includes('e'))d.classList.add('cap');}
     if(ff===(flip?7:0)){const c=document.createElement('span');c.className='c';c.textContent=rr+1;d.appendChild(c);}
     if(rr===(flip?7:0)){const c=document.createElement('span');c.className='c f';c.textContent='abcdefgh'[ff];d.appendChild(c);}
@@ -110,9 +111,9 @@ function render(){
   else st.textContent=(g.turn()==='w'?'White':'Black')+' to move'+(g.in_check()?' (check)':'')+(g.turn()===side?' — your turn':' — opponent’s turn');
   hist();}
 function drawArrow(){
-  const a=$('arrow');a.innerHTML='';if(!best||view!==null)return;
-  const bw=$('bw').getBoundingClientRect(),q=document.querySelector('[data-s="'+best.from+'"]');if(!q)return;const u=q.getBoundingClientRect().width;a.setAttribute('viewBox','0 0 '+bw.width/u+' '+bw.height/u);const c=s=>{const r=document.querySelector('[data-s="'+s+'"]').getBoundingClientRect();return[(r.left+r.width/2-bw.left)/u,(r.top+r.height/2-bw.top)/u];};
-  const[x1,y1]=c(best.from),[x2,y2]=c(best.to),dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+  const a=$('arrow');a.innerHTML='';const B=best||keep;if(!B||view!==null)return;
+  const bw=$('bw').getBoundingClientRect(),q=document.querySelector('[data-s="'+B.from+'"]');if(!q)return;const u=q.getBoundingClientRect().width;a.setAttribute('viewBox','0 0 '+bw.width/u+' '+bw.height/u);const c=s=>{const r=document.querySelector('[data-s="'+s+'"]').getBoundingClientRect();return[(r.left+r.width/2-bw.left)/u,(r.top+r.height/2-bw.top)/u];};
+  const[x1,y1]=c(B.from),[x2,y2]=c(B.to),dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
   const ex=x2-ux*.3,ey=y2-uy*.3;
   a.innerHTML=`<line x1="${x1}" y1="${y1}" x2="${ex}" y2="${ey}" stroke="rgba(60,170,40,.85)" stroke-width=".16" stroke-linecap="round"/><polygon fill="rgba(60,170,40,.85)" points="${x2},${y2} ${ex-uy*.26},${ey+ux*.26} ${ex+uy*.26},${ey-ux*.26}"/>`;}
 function hist(){
@@ -127,9 +128,9 @@ function clickSq(s){
   if(sel){const m=game.moves({square:sel,verbose:true}).find(m=>m.to===s);
     if(m){doMove({from:sel,to:s,promotion:'q'});return;}}
   sel=p&&p.color===game.turn()?s:null;render();}
-function doMove(m){
+function doMove(m,auto){clearTimeout(autoT);
   const r=game.move(m);if(!r){err('Illegal move.');return false;}
-  sel=null;best=null;view=null;render();analyse();return true;}
+  sel=null;best=null;view=null;keep=auto&&r.color===side?{from:r.from,to:r.to}:null;render();analyse();return true;}
 function err(t){$('err').textContent=t;}
 // ---------- engine ----------
 let sf=null,sfReady=false,engName='Built-in engine (alpha-beta, depth 3)';
@@ -171,7 +172,7 @@ function fbAnalyse(fen){const g=new Chess(fen),sg=g.turn()==='w'?1:-1,res=[];
   res.sort((a,b)=>(b.cp-a.cp)*sg);
   return res.slice(0,3).map(r=>{if(Math.abs(r.cp)>=99000)r.mate=Math.sign(r.cp)*1;return r;});}
 async function analyse(){
-  const my=++tok,g=game;best=null;lines=[];
+  const my=++tok,g=game;clearTimeout(autoT);if(g.turn()===side)keep=null;best=null;lines=[];
   if(g.game_over()){$('best').textContent='Game over';$('why').textContent='';$('alts').innerHTML='';setEval(g);render();return;}
   if(g.turn()!==side){$('best').textContent='Waiting for opponent';$('why').textContent='Enter their move below, or move it on the board.';$('alts').innerHTML='';
     if(sf&&sfReady)sf.postMessage('stop');render();return;
@@ -194,7 +195,7 @@ function setEval(g){const w=g.in_checkmate()?(g.turn()==='w'?0:100):50;$('evalw'
 const NAMES={p:'Pawn',n:'Knight',b:'Bishop',r:'Rook',q:'Queen',k:'King'};
 function show(r,g){
   const t=new Chess(g.fen()),mm=t.move({from:r[0].uci.slice(0,2),to:r[0].uci.slice(2,4),promotion:r[0].uci[4]||undefined});if(!mm)return;
-  best=mm;
+  best=mm;clearTimeout(autoT);const t0=tok;autoT=setTimeout(()=>{if($('auto').checked&&best&&t0===tok&&view===null&&!game.game_over()&&game.turn()===side)doMove({from:best.from,to:best.to,promotion:best.promotion},true);},3000);
   $('best').textContent=`${NAMES[mm.piece]} ${mm.from} → ${mm.to}  (${mm.san})`;
   const sgn=side==='w'?1:-1,my=r[0].mate?r[0].mate*sgn:r[0].cp*sgn;
   let why=[];
@@ -245,18 +246,17 @@ function opp(){const v=$('opp').value.trim();if(!v)return;
   let m=game.move(v,{sloppy:true});
   if(!m&&/^[a-h][1-8][a-h][1-8][qrbn]?$/i.test(v))m=game.move({from:v.slice(0,2).toLowerCase(),to:v.slice(2,4).toLowerCase(),promotion:(v[4]||'q').toLowerCase()});
   if(!m){err(`“${v}” is not a legal move for ${game.turn()==='w'?'White':'Black'} here. Try e5, Nf3, O-O or e7e5.`);return;}
-  err('');$('opp').value='';sel=null;best=null;render();analyse();}
+  err('');$('opp').value='';sel=null;best=null;keep=null;clearTimeout(autoT);render();analyse();}
 $('oppb').onclick=opp;$('opp').onkeydown=e=>{if(e.key==='Enter')opp();};
 $('play').onclick=()=>{if(view!==null)return;if(!best){err('No recommended move yet — it may be the opponent’s turn.');return;}
   doMove({from:best.from,to:best.to,promotion:best.promotion});};
 $('re').onclick=()=>{view=null;analyse();render();};
-$('undo').onclick=()=>{if(!game.history().length)return;game.undo();view=null;sel=null;best=null;err('');render();analyse();};
-$('reset').onclick=()=>{game=new Chess();view=null;sel=null;best=null;err('');$('alts').innerHTML='';render();analyse();};
+$('undo').onclick=()=>{if(!game.history().length)return;game.undo();keep=null;view=null;sel=null;best=null;err('');render();analyse();};
+$('reset').onclick=()=>{game=new Chess();keep=null;view=null;sel=null;best=null;err('');$('alts').innerHTML='';render();analyse();};
 $('live').onclick=()=>{view=null;render();};
 $('loadfen').onclick=()=>{const f=$('fen').value.trim(),g=new Chess();
   if(!f||!g.load(f)){err('That FEN is not valid.');return;}
-  game=g;view=null;sel=null;best=null;err('');render();analyse();};
+  game=g;keep=null;view=null;sel=null;best=null;err('');render();analyse();};
 $('copyfen').onclick=()=>{$('fen').value=game.fen();};
 render();analyse();initSF();window.addEventListener('resize',drawArrow);
 </script></body></html>
-
