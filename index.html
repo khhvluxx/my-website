@@ -68,7 +68,7 @@ input,textarea{background:var(--bg);color:var(--tx);border:1px solid #444;border
   <div class="card"><h3>Engine strength</h3><div id="elo" style="font-size:18px;font-weight:800;color:var(--g)"></div><input type="range" id="lvl" min="0" max="20" value="20" style="padding:0;margin-top:8px"><div class="small" style="margin-top:4px">Elo is an approximate guide for Stockfish skill levels 0–20. Only applies when Stockfish is running.</div></div>
   <div class="card"><h3>Opponent move</h3>
    <div class="row"><input id="opp" placeholder="e.g. e5, Nf3 or e7e5"><button class="b pri" id="oppb" style="flex:0 0 auto">Opponent Played</button></div>
-   <div id="err"></div></div>
+   <div id="err"></div><div id="oelo" style="margin-top:8px;font-weight:700;color:var(--g)">Opponent Elo guess: needs 3 more moves</div></div>
   <div class="card"><h3>Moves</h3><div id="hist"></div>
    <div class="row"><button class="b" id="undo">Undo</button><button class="b" id="reset">Restart</button><button class="b" id="live">Back to live</button></div></div>
   <div class="card"><h3>Load position (FEN)</h3><input id="fen" placeholder="Paste FEN here">
@@ -80,7 +80,7 @@ input,textarea{background:var(--bg);color:var(--tx);border:1px solid #444;border
 <script>
 const $=id=>document.getElementById(id);
 const F={p:'♟\uFE0E',n:'♞',b:'♝',r:'♜',q:'♛',k:'♚'};const G={W:F,B:F};
-let keep=null,autoT=null,cdT=null,game=new Chess(),side='w',flip=false,sel=null,view=null,best=null,tok=0,lines=[];
+let keep=null,autoT=null,cdT=null,startFen=null,game=new Chess(),side='w',flip=false,sel=null,view=null,best=null,tok=0,lines=[];
 const SQ=(f,r)=>'abcdefgh'[f]+(r+1);
 function cur(){ // position being shown
   if(view===null)return game;
@@ -118,7 +118,9 @@ function drawArrow(){
   const[x1,y1]=c(B.from),[x2,y2]=c(B.to),dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
   const ex=x2-ux*.3,ey=y2-uy*.3;
   a.innerHTML=`<line x1="${x1}" y1="${y1}" x2="${ex}" y2="${ey}" stroke="rgba(60,170,40,.85)" stroke-width=".16" stroke-linecap="round"/><polygon fill="rgba(60,170,40,.85)" points="${x2},${y2} ${ex-uy*.26},${ey+ux*.26} ${ex+uy*.26},${ey-ux*.26}"/>`;}
-function hist(){
+function saveG(){try{localStorage.setItem('chessgame',JSON.stringify({s:startFen,m:game.history(),side,flip,L:losses}));}catch(e){}}
+function restoreG(){try{const d=JSON.parse(localStorage.getItem('chessgame')||'null');if(!d)return;const g=new Chess();if(d.s&&!g.load(d.s))return;for(const m of d.m){if(!g.move(m))return;}game=g;startFen=d.s||null;side=d.side==='b'?'b':'w';flip=!!d.flip;losses=Array.isArray(d.L)?d.L:[];$('bW').classList.toggle('on',side==='w');$('bB').classList.toggle('on',side==='b');}catch(e){}}
+function hist(){saveG();
   const h=$('hist'),mv=game.history(),n=view===null?mv.length:view;h.innerHTML='';
   for(let i=0;i<mv.length;i+=2){
     const num=document.createElement('span');num.className='n';num.textContent=(i/2+1)+'.';h.appendChild(num);
@@ -131,7 +133,7 @@ function clickSq(s){
     if(m){doMove({from:sel,to:s,promotion:'q'});return;}}
   sel=p&&p.color===game.turn()?s:null;render();}
 function doMove(m,auto){cancelAuto();
-  const r=game.move(m);if(!r){err('Illegal move.');return false;}
+  const r=game.move(m);if(!r){err('Illegal move.');return false;}if(r.color===side){const ln=lines.find(x=>x.uci===r.from+r.to+(r.promotion||''));pend=ln?clipc(ln.cp):null;}
   sel=null;best=null;view=null;keep=auto&&r.color===side?{from:r.from,to:r.to}:null;render();analyse();return true;}
 function err(t){$('err').textContent=t;}
 // ---------- engine ----------
@@ -186,6 +188,7 @@ async function analyse(){
   if(my!==tok)return;
   lines=r;if(!r.length)return;
   setBar(r.top||r[0]);
+  if(g.turn()===side&&pend!==null){const e=clipc((r.top||r[0]).cp);losses.push(Math.min(600,Math.max(0,(pend-e)*(side==='b'?1:-1))));pend=null;showOElo();}
   if(g.turn()!==side)return;
   show(r,g);}
 function fmt(l){return l.mate?('M'+Math.abs(l.mate)*(l.mate>0?1:-1)):(l.cp>=0?'+':'')+(l.cp/100).toFixed(1);}
@@ -211,13 +214,28 @@ function show(r,g){
   $('why').textContent=why.join(' ');
   $('alts').innerHTML=r.map((l,i)=>{const x=new Chess(g.fen()),m=x.move({from:l.uci.slice(0,2),to:l.uci.slice(2,4),promotion:l.uci[4]||undefined});return m?`<div class="alt"><span>${i+1}. ${m.san} (${m.from}→${m.to})</span><span>${fmt(l)}</span></div>`:'';}).join('');
   render();}
+// ---------- promotion picker ----------
+function tryMove(from,to){
+  const pm=game.moves({square:from,verbose:true}).find(m=>m.to===to&&m.promotion);
+  if(!pm)return doMove({from,to});
+  promoPick(game.turn(),p=>doMove({from,to,promotion:p}));return true;}
+function promoPick(color,cb){
+  const old=$('promo');if(old)old.remove();
+  const o=document.createElement('div');o.id='promo';
+  o.style.cssText='position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;gap:10px;z-index:50;border-radius:8px';
+  o.onclick=e=>{if(e.target===o){o.remove();sel=null;render();}};
+  const N={q:'Queen',r:'Rook',b:'Bishop',n:'Knight'};
+  for(const t of ['q','r','b','n']){const b=document.createElement('button');b.title='Promote to '+N[t];b.className=color==='w'?'pw':'pb';
+    b.style.cssText='font-size:min(11vw,9vh,64px);line-height:1;padding:6px 10px;border:0;border-radius:10px;background:#ebecd0;cursor:pointer';
+    b.textContent=G.W[t];b.onclick=()=>{o.remove();cb(t);};o.appendChild(b);}
+  $('bw').appendChild(o);}
 // ---------- drag & click to move ----------
 let drag=null;
 function pdown(e,s){
   if(e.button>0)return;
   if(view!==null){err('Viewing an earlier position — press “Back to live” to continue.');return;}
   err('');const p=game.get(s);
-  if(sel&&sel!==s&&game.moves({square:sel,verbose:true}).some(m=>m.to===s)){doMove({from:sel,to:s,promotion:'q'});return;}
+  if(sel&&sel!==s&&game.moves({square:sel,verbose:true}).some(m=>m.to===s)){tryMove(sel,s);return;}
   if(p&&p.color===game.turn()){
     sel=s;render();
     const el=document.querySelector('[data-s="'+s+'"] .pc');if(!el)return;
@@ -234,10 +252,16 @@ document.addEventListener('pointerup',e=>{
   if(!drag)return;const d=drag;drag=null;d.gh.remove();
   if(d.moved){
     const t=document.elementFromPoint(e.clientX,e.clientY),sq=t&&t.closest('.sq');
-    if(sq&&sq.dataset.s!==d.from){if(doMove({from:d.from,to:sq.dataset.s,promotion:'q'}))return;}
+    if(sq&&sq.dataset.s!==d.from){if(tryMove(d.from,sq.dataset.s))return;}
   }
   render();});
 document.addEventListener('pointercancel',()=>{if(drag){drag.gh.remove();drag=null;render();}});
+// ---------- opponent elo guess ----------
+let losses=[],pend=null;
+function clipc(c){return Math.max(-1000,Math.min(1000,c));}
+function showOElo(){const n=losses.length;if(n<3){$('oelo').textContent='Opponent Elo guess: needs '+(3-n)+' more move'+(3-n===1?'':'s');return;}
+  const acpl=losses.reduce((a,b)=>a+b,0)/n,e=Math.max(400,Math.min(3000,Math.round(3100*Math.exp(-0.01*acpl)/50)*50));
+  $('oelo').textContent='Opponent Elo guess: ~'+e+' (avg loss '+Math.round(acpl)+' cp over '+n+' moves)';}
 // ---------- strength ----------
 let lvl=20;try{const v=localStorage.getItem('lvl');if(v!==null)lvl=Math.min(20,Math.max(0,+v||0));}catch(e){}
 function showLvl(){$('elo').textContent='Level '+lvl+' — approx. '+(800+lvl*110)+' Elo'+(lvl===20?' (full strength)':'');}
@@ -249,10 +273,10 @@ let autoOn=true;try{autoOn=localStorage.getItem('auto')!=='0';}catch(e){}
 function cancelAuto(){clearTimeout(autoT);clearInterval(cdT);const c=$('cd');if(c)c.textContent='';}
 function schedule(){
   cancelAuto();if(!autoOn||!best)return;
-  const t0=tok;let n=1;$('cd').textContent='Auto-playing in '+n+'…';
+  const t0=tok;let n=3;$('cd').textContent='Auto-playing in '+n+'…';
   cdT=setInterval(()=>{n--;if(n>0)$('cd').textContent='Auto-playing in '+n+'…';},1000);
   autoT=setTimeout(()=>{clearInterval(cdT);$('cd').textContent='';
-    if(autoOn&&best&&t0===tok&&view===null&&!game.game_over()&&game.turn()===side)doMove({from:best.from,to:best.to,promotion:best.promotion},true);},1000);}
+    if(autoOn&&best&&t0===tok&&view===null&&!game.game_over()&&game.turn()===side)doMove({from:best.from,to:best.to,promotion:best.promotion},true);},3000);}
 function setAuto(v){autoOn=v;try{localStorage.setItem('auto',v?'1':'0');}catch(e){}
   $('autob').textContent='Auto-play: '+(v?'ON':'OFF');$('autob').className='b'+(v?' pri':'');
   if(!v)cancelAuto();else if(best&&view===null&&game.turn()===side)schedule();}
@@ -264,6 +288,7 @@ $('flip').onclick=()=>{flip=!flip;render();};
 function opp(){const v=$('opp').value.trim();if(!v)return;
   if(view!==null){err('Press “Back to live” first.');return;}
   if(game.game_over()){err('The game is over.');return;}
+  const u=/^([a-h][1-8])([a-h][1-8])$/i.exec(v);if(u){const f=u[1].toLowerCase(),t=u[2].toLowerCase();if(game.moves({square:f,verbose:true}).some(x=>x.to===t&&x.promotion)){promoPick(game.turn(),k=>{$('opp').value=f+t+k;opp();});return;}}
   let m=game.move(v,{sloppy:true});
   if(!m&&/^[a-h][1-8][a-h][1-8][qrbn]?$/i.test(v))m=game.move({from:v.slice(0,2).toLowerCase(),to:v.slice(2,4).toLowerCase(),promotion:(v[4]||'q').toLowerCase()});
   if(!m){err(`“${v}” is not a legal move for ${game.turn()==='w'?'White':'Black'} here. Try e5, Nf3, O-O or e7e5.`);return;}
@@ -272,12 +297,12 @@ $('oppb').onclick=opp;$('opp').onkeydown=e=>{if(e.key==='Enter')opp();};
 $('play').onclick=()=>{if(view!==null)return;if(!best){err('No recommended move yet — it may be the opponent’s turn.');return;}
   doMove({from:best.from,to:best.to,promotion:best.promotion});};
 $('re').onclick=()=>{view=null;analyse();render();};
-$('undo').onclick=()=>{if(!game.history().length)return;game.undo();keep=null;view=null;sel=null;best=null;err('');render();analyse();};
-$('reset').onclick=()=>{game=new Chess();keep=null;view=null;sel=null;best=null;err('');$('alts').innerHTML='';render();analyse();};
+$('undo').onclick=()=>{if(!game.history().length)return;game.undo();pend=null;keep=null;view=null;sel=null;best=null;err('');render();analyse();};
+$('reset').onclick=()=>{game=new Chess();startFen=null;losses=[];pend=null;showOElo();keep=null;view=null;sel=null;best=null;err('');$('alts').innerHTML='';render();analyse();};
 $('live').onclick=()=>{view=null;render();};
 $('loadfen').onclick=()=>{const f=$('fen').value.trim(),g=new Chess();
   if(!f||!g.load(f)){err('That FEN is not valid.');return;}
-  game=g;keep=null;view=null;sel=null;best=null;err('');render();analyse();};
+  game=g;startFen=f;losses=[];pend=null;showOElo();keep=null;view=null;sel=null;best=null;err('');render();analyse();};
 $('copyfen').onclick=()=>{$('fen').value=game.fen();};
-setAuto(autoOn);render();analyse();initSF();window.addEventListener('resize',drawArrow);
+restoreG();showOElo();setAuto(autoOn);render();analyse();initSF();window.addEventListener('resize',drawArrow);
 </script></body></html>
